@@ -148,16 +148,17 @@ body {
 /* ============================================================
    PAGE 1 — LANDING
    ============================================================ */
-#page1 { justify-content: center; }
+#page1 { justify-content: center; background: var(--burgundy); padding: 0; }
 
 .p1-hero {
   background: var(--burgundy);
-  width: 100%; max-width: 520px;
-  padding: 52px 32px 48px;
-  display: flex; flex-direction: column; align-items: center; text-align: center;
+  width: 100%; max-width: none;
+  min-height: 100vh;
+  padding: 60px 32px 100px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
   gap: 22px; position: relative;
-  border-radius: var(--radius-hero);
-  box-shadow: var(--shadow-hero);
+  border-radius: 0;
+  box-shadow: none;
   overflow: hidden;
 }
 .p1-headline {
@@ -1346,16 +1347,16 @@ function calculateResult() {
 /* ================================================================
    OPT-IN
    ================================================================ */
-function submitToKajabi(name, email) {
-  const raw = getLS('ssq_result') || '';
-  const archetype = raw.charAt(0).toUpperCase() + raw.slice(1);
-  const KJB_FORMS = {
-    Refiner:    { id: '2149582559', token: '9YUL8g3mWEc9nwCM7Pu_lX4L_khctm3HhnEaEIdcgu_Xx2SfE-HJUP0QPCeV6hEzHAqvj0o8nZOHZw4h3eEI8A' },
-    Spiker:     { id: '2149582560', token: 'CDCPAwNa_O5707rLSStf-wlKZXKZZbd0zd5CDcVHvWKUypEkC4nVT2CzNlnjREvm7l00Ji9-GV70Q1jRpeSKJw' },
-    Studier:    { id: '2149582561', token: '6TM29zvcnmTs-CYORxlToAUgMvFMiuZJMR4a3lC-DAmq9vuM6zIT4MuDuNPMWI3x-DfPMdNzY7Bq-QpK_nfoVg' },
-    Overworker: { id: '2149582563', token: 'FRHso57IGpNcwC2XFyRj2Zz5yOpYl5sgb1m27c36Bz5lxKovUchkQDC2tegMamdTpu_LxmJ2r7nfDkMH6Bdb3w' },
-  };
-  const form_cfg = KJB_FORMS[archetype] || { id: '2149581985', token: '_1Tatfgl412EvGzimUZvpRATw9i8d8cUKqIw8J2lyLTp27lFOMZ8cDbY0FfuEo1WRiMS-sJ2mofgmbAF7QXRug' };
+const KJB_FORMS = {
+  refiner:    { id: '2149582559', token: '9YUL8g3mWEc9nwCM7Pu_lX4L_khctm3HhnEaEIdcgu_Xx2SfE-HJUP0QPCeV6hEzHAqvj0o8nZOHZw4h3eEI8A' },
+  spiker:     { id: '2149582560', token: 'CDCPAwNa_O5707rLSStf-wlKZXKZZbd0zd5CDcVHvWKUypEkC4nVT2CzNlnjREvm7l00Ji9-GV70Q1jRpeSKJw' },
+  studier:    { id: '2149582561', token: '6TM29zvcnmTs-CYORxlToAUgMvFMiuZJMR4a3lC-DAmq9vuM6zIT4MuDuNPMWI3x-DfPMdNzY7Bq-QpK_nfoVg' },
+  overworker: { id: '2149582563', token: 'FRHso57IGpNcwC2XFyRj2Zz5yOpYl5sgb1m27c36Bz5lxKovUchkQDC2tegMamdTpu_LxmJ2r7nfDkMH6Bdb3w' },
+};
+
+function submitToKajabi(name, email, archetype) {
+  const form_cfg = KJB_FORMS[archetype];
+  if (!form_cfg) { console.warn('No Kajabi form found for archetype:', archetype); return; }
   const iframeName = 'kjb-frame-' + Date.now();
   const iframe = document.createElement('iframe');
   iframe.name = iframeName;
@@ -1380,7 +1381,8 @@ function submitOptIn(e) {
   if (!name || !email) return;
   setLS('ssq_name',  name);
   setLS('ssq_email', email);
-  submitToKajabi(name, email);
+  const archetype = getLS('ssq_result') || calculateResult();
+  submitToKajabi(name, email, archetype);
   renderPage4();
   showPage(4);
 }
