@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page 2 — Quiz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600;1,700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f2f2f2; --burgundy: #54110f; --deep-burg: #30160f;
+      --pink: #f39fa9; --cream: #f4e8d8; --white: #ffffff; --body: #1a1a1a;
+      --shadow-hero: 12px 12px 0 var(--deep-burg);
+      --shadow-card: 6px 6px 0 var(--deep-burg);
+      --shadow-sm: 4px 4px 0 var(--deep-burg);
+      --radius-hero: 20px; --radius-card: 16px; --radius-sm: 12px; --radius-pill: 999px;
+      --font-head: 'Helvetica Now', Helvetica, 'Arial Black', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --font-serif: 'Playfair Display', Georgia, serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      font-family: var(--font-body);
+      color: var(--body);
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 32px 16px 64px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .doodle { position: absolute; opacity: 0.55; pointer-events: none; z-index: 1; }
+    .card-hero-inner {
+      border-radius: 14px;
+      border: 1px solid rgba(243,159,169,0.45);
+      position: absolute;
+      inset: 10px;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-pill);
+      padding: 14px 32px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+    }
+    .pill-cream {
+      background: var(--cream);
+      color: var(--burgundy);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--burgundy);
+    }
+    .pill-burgundy {
+      background: var(--burgundy);
+      color: var(--cream);
+      box-shadow: 4px 4px 0 var(--deep-burg);
+      border: 1px solid var(--deep-burg);
+    }
+    .pill-pink-label {
+      background: var(--pink);
+      color: var(--burgundy);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 7px 18px;
+      border-radius: var(--radius-pill);
+      display: inline-block;
+    }
+    @keyframes jiggle {
+      0%,100% { transform: rotate(-1.5deg) translateY(0); }
+      25% { transform: rotate(1.5deg) translateY(-3px); }
+      50% { transform: rotate(-1deg) translateY(0); }
+      75% { transform: rotate(1deg) translateY(-2px); }
+    }
+    .anim-jiggle { animation: jiggle 2s ease-in-out infinite; }
+
+    /* Page 2 */
+    .p2-card {
+      background: var(--cream);
+      width: 100%;
+      max-width: 560px;
+      border: 1px solid var(--burgundy);
+      border-radius: 20px;
+      box-shadow: 12px 12px 0 #30160f;
+      overflow: hidden;
+    }
+    .p2-stripe {
+      height: 6px;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--burgundy) 0px,
+        var(--burgundy) 12px,
+        var(--cream) 12px,
+        var(--cream) 24px
+      );
+    }
+    .p2-header {
+      padding: 20px 24px 16px;
+    }
+    .p2-progress-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .p2-q-label {
+      color: var(--burgundy);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .p2-pct {
+      color: var(--burgundy);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+    }
+    .p2-progress-track {
+      background: var(--white);
+      border: 1px solid var(--burgundy);
+      border-radius: 999px;
+      height: 8px;
+      overflow: hidden;
+    }
+    .p2-progress-fill {
+      background: var(--burgundy);
+      height: 100%;
+      border-radius: 999px;
+      width: 0%;
+    }
+    .p2-q-card {
+      background: var(--white);
+      border: 1px solid var(--burgundy);
+      border-radius: 16px;
+      box-shadow: 6px 6px 0 #30160f;
+      margin: 0 20px;
+      padding: 24px 20px 20px;
+    }
+    .p2-scenario-label {
+      color: var(--burgundy);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .p2-question-text {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      line-height: 1.4;
+      color: var(--body);
+      margin-bottom: 20px;
+    }
+    .p2-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .p2-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: var(--cream);
+      border: 1px solid var(--pink);
+      border-radius: 12px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .p2-option:hover:not(.selected) {
+      border-color: var(--burgundy);
+    }
+    .p2-option.selected {
+      background: var(--burgundy);
+      border-color: var(--burgundy);
+      box-shadow: 4px 4px 0 #30160f;
+    }
+    .p2-circle {
+      width: 20px;
+      height: 20px;
+      min-width: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--pink);
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+    .p2-option.selected .p2-circle {
+      background: var(--pink);
+      border-color: var(--pink);
+    }
+    .p2-check {
+      display: none;
+    }
+    .p2-option.selected .p2-check {
+      display: block;
+    }
+    .p2-opt-text {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--body);
+    }
+    .p2-option.selected .p2-opt-text {
+      color: var(--cream);
+    }
+    .p2-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 20px 24px;
+    }
+    .p2-back-btn {
+      color: var(--burgundy);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: var(--font-body);
+      opacity: 0.3;
+    }
+    @media (min-width: 640px) { .p2-card { max-width: 600px; } }
+  </style>
+</head>
+<body>
+  <div class="p2-card">
+    <div class="p2-stripe"></div>
+
+    <div class="p2-header">
+      <div class="p2-progress-row">
+        <span class="p2-q-label">Question 01 / 07</span>
+        <span class="p2-pct">0%</span>
+      </div>
+      <div class="p2-progress-track">
+        <div class="p2-progress-fill"></div>
+      </div>
+    </div>
+
+    <div class="p2-q-card">
+      <div class="p2-scenario-label">Scenario</div>
+      <p class="p2-question-text">Looking at your business right now, the most honest sentence is:</p>
+
+      <div class="p2-options">
+
+        <!-- Option A -->
+        <div class="p2-option">
+          <div class="p2-circle">
+            <svg class="p2-check" width="10" height="8" viewBox="0 0 10 8" fill="none">
+              <path d="M1 4l2.5 2.5L9 1" stroke="#54110f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="p2-opt-text">Something was working, but I'm reworking it because I think I can make it better.</span>
+        </div>
+
+        <!-- Option B (selected) -->
+        <div class="p2-option selected">
+          <div class="p2-circle">
+            <svg class="p2-check" width="10" height="8" viewBox="0 0 10 8" fill="none">
+              <path d="M1 4l2.5 2.5L9 1" stroke="#54110f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="p2-opt-text">I've had big months, but I can't seem to make the income consistent.</span>
+        </div>
+
+        <!-- Option C -->
+        <div class="p2-option">
+          <div class="p2-circle">
+            <svg class="p2-check" width="10" height="8" viewBox="0 0 10 8" fill="none">
+              <path d="M1 4l2.5 2.5L9 1" stroke="#54110f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="p2-opt-text">I know exactly what I need to do. I'm just not doing it.</span>
+        </div>
+
+        <!-- Option D -->
+        <div class="p2-option">
+          <div class="p2-circle">
+            <svg class="p2-check" width="10" height="8" viewBox="0 0 10 8" fill="none">
+              <path d="M1 4l2.5 2.5L9 1" stroke="#54110f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="p2-opt-text">I'm working really hard, but the revenue doesn't match the hours.</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="p2-nav">
+      <button class="p2-back-btn">← Back</button>
+      <button class="pill pill-burgundy">Next →</button>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.p2-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        document.querySelectorAll('.p2-option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+      });
+    });
+  </script>
+<style>
+.site-footer {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  padding: 9px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  background: rgba(22, 6, 3, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 200;
+  font-family: var(--font-body, 'DM Sans', sans-serif);
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  color: rgba(244,232,216,0.65);
+  flex-wrap: wrap;
+}
+.footer-links { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+.footer-links a { color: rgba(244,232,216,0.65); text-decoration: underline; text-underline-offset: 2px; white-space: nowrap; }
+.footer-links a:hover { color: rgba(244,232,216,1); }
+.footer-copy { white-space: nowrap; color: rgba(244,232,216,0.5); }
+@media (max-width: 480px) {
+  .site-footer { padding: 7px 14px; font-size: 9.5px; gap: 4px; }
+  .footer-links { gap: 10px; }
+}
+</style>
+<footer class="site-footer">
+  <div class="footer-links">
+    <a href="https://www.jessicapinili.com/jpinili-terms-conditions" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</a>
+    <a href="https://www.womanmasteryhq.com" target="_blank" rel="noopener noreferrer">Woman Mastery HQ Membership</a>
+  </div>
+  <span class="footer-copy">Jessica Pinili &copy;</span>
+</footer>
+</body>
+</html>

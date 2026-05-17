@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Success Setpoint Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Playfair Display regular+bold only (no italic — italic moments use DM Sans) -->
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600;1,700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   DESIGN SYSTEM
+   ============================================================ */
+:root {
+  --bg:        #f2f2f2;
+  --burgundy:  #54110f;
+  --deep-burg: #30160f;
+  --pink:      #f39fa9;
+  --cream:     #f4e8d8;
+  --white:     #ffffff;
+  --body:      #1a1a1a;
+
+  --shadow-hero: 12px 12px 0 var(--deep-burg);
+  --shadow-card: 6px 6px 0 var(--deep-burg);
+  --shadow-sm:   4px 4px 0 var(--deep-burg);
+  --shadow-pink: 5px 5px 0 var(--pink);
+
+  --radius-hero: 20px;
+  --radius-card: 16px;
+  --radius-sm:   12px;
+  --radius-pill: 999px;
+
+  /* Italic moments: DM Sans italic — clean, editorial, not cursive */
+  --font-head:  'Helvetica Now', Helvetica, 'Arial Black', sans-serif;
+  --font-body:  'DM Sans', sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif; /* non-italic uses only */
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  font-family: var(--font-body);
+  color: var(--body);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- PAGE SYSTEM ---- */
+.page {
+  display: none;
+  opacity: 0;
+  transition: opacity 300ms ease;
+  min-height: 100vh;
+  padding: 24px 16px 80px;
+}
+.page.active  { display: flex; flex-direction: column; align-items: center; }
+.page.visible { opacity: 1; }
+
+/* ---- SHARED CARD PATTERNS ---- */
+.card-hero-inner {
+  border-radius: 14px;
+  border: 1px solid rgba(243,159,169,0.45);
+  position: absolute;
+  inset: 10px;
+  pointer-events: none;
+  z-index: 2;
+}
+.doodle {
+  position: absolute;
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ---- PILLS ---- */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  padding: 14px 32px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.pill:active { transform: translate(2px, 2px); }
+.pill-cream {
+  background: var(--cream);
+  color: var(--burgundy);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--burgundy);
+}
+.pill-cream:hover { box-shadow: 6px 6px 0 var(--deep-burg); }
+.pill-burgundy {
+  background: var(--burgundy);
+  color: var(--cream);
+  box-shadow: 4px 4px 0 var(--deep-burg);
+  border: 1px solid var(--deep-burg);
+}
+.pill-burgundy:hover { box-shadow: 6px 6px 0 var(--deep-burg); }
+.pill-pink-label {
+  background: var(--pink);
+  color: var(--burgundy);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 7px 18px;
+  border-radius: var(--radius-pill);
+  display: inline-block;
+}
+
+/* ---- ANIMATIONS ---- */
+@keyframes jiggle {
+  0%,100% { transform: rotate(-1.5deg) translateY(0); }
+  25%      { transform: rotate(1.5deg) translateY(-3px); }
+  50%      { transform: rotate(-1deg) translateY(0); }
+  75%      { transform: rotate(1deg) translateY(-2px); }
+}
+@keyframes shake {
+  0%,100% { transform: rotate(-1.5deg); }
+  33%      { transform: rotate(2deg); }
+  66%      { transform: rotate(-1deg); }
+}
+/* CTA jiggle: occasional, premium — active ~15% of the cycle */
+@keyframes cta-jiggle {
+  0%, 78%, 100% { transform: translateX(0) rotate(0deg); }
+  80%            { transform: translateX(-3px) rotate(-0.6deg); }
+  83%            { transform: translateX(3px) rotate(0.6deg); }
+  86%            { transform: translateX(-2px) rotate(-0.4deg); }
+  89%            { transform: translateX(1px) rotate(0.2deg); }
+  92%            { transform: translateX(0) rotate(0deg); }
+}
+.anim-jiggle     { animation: jiggle 2s ease-in-out infinite; }
+.anim-shake      { animation: shake 1.6s ease-in-out infinite; }
+.anim-cta-jiggle { animation: cta-jiggle 5s ease-in-out infinite; }
+
+/* ============================================================
+   PAGE 1 — LANDING
+   ============================================================ */
+#page1 { justify-content: center; }
+
+.p1-hero {
+  background: var(--burgundy);
+  width: 100%; max-width: 520px;
+  padding: 52px 32px 48px;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  gap: 22px; position: relative;
+  border-radius: var(--radius-hero);
+  box-shadow: var(--shadow-hero);
+  overflow: hidden;
+}
+.p1-headline {
+  color: var(--cream);
+  font-family: var(--font-head);
+  font-weight: 900;
+  font-size: clamp(42px, 10vw, 60px);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+/* Clean italic — DM Sans italic, not Playfair */
+.p1-headline-italic {
+  color: var(--pink);
+  font-family: var(--font-body);
+  font-style: italic;
+  font-weight: 700;
+  display: block;
+}
+.p1-subhead {
+  color: var(--cream);
+  opacity: 0.75;
+  font-size: 15px;
+  line-height: 1.55;
+  max-width: 340px;
+}
+.p1-highlight {
+  background: var(--pink);
+  border: 1px solid var(--burgundy);
+  border-radius: 14px;
+  box-shadow: 5px 5px 0 var(--deep-burg);
+  padding: 16px 20px;
+  color: var(--burgundy);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.5;
+  max-width: 360px;
+}
+.p1-meta {
+  color: var(--pink);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   PAGE 2 — QUIZ
+   ============================================================ */
+#page2 { justify-content: flex-start; padding-top: 32px; }
+
+.p2-card {
+  background: var(--cream);
+  width: 100%; max-width: 560px;
+  border: 1px solid var(--burgundy);
+  border-radius: var(--radius-hero);
+  box-shadow: var(--shadow-hero);
+  overflow: hidden;
+}
+.p2-stripe {
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg, var(--burgundy) 0px, var(--burgundy) 12px,
+    var(--cream) 12px, var(--cream) 24px
+  );
+}
+.p2-header { padding: 20px 24px 16px; }
+.p2-progress-row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 10px;
+}
+.p2-q-label { color: var(--burgundy); font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; }
+.p2-pct     { color: var(--burgundy); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; }
+.p2-progress-track { background: var(--white); border: 1px solid var(--burgundy); border-radius: 999px; height: 8px; overflow: hidden; }
+.p2-progress-fill  { background: var(--burgundy); height: 100%; border-radius: 999px; transition: width 0.35s ease; }
+
+.p2-question-card {
+  background: var(--white);
+  border: 1px solid var(--burgundy);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  margin: 0 20px;
+  padding: 24px 20px 20px;
+}
+.p2-scenario-label { color: var(--burgundy); font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 10px; }
+.p2-question-text  { font-family: var(--font-serif); font-size: 20px; line-height: 1.4; color: var(--body); margin-bottom: 20px; }
+.p2-options { display: flex; flex-direction: column; gap: 10px; }
+.p2-option {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: var(--cream);
+  border: 1px solid var(--pink);
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  -webkit-user-select: none; user-select: none;
+}
+.p2-option:hover { border-color: var(--burgundy); }
+.p2-option.selected {
+  background: var(--burgundy); color: var(--cream);
+  border-color: var(--burgundy);
+  box-shadow: 4px 4px 0 var(--deep-burg);
+}
+.p2-option-circle {
+  width: 20px; height: 20px; min-width: 20px;
+  border-radius: 50%; border: 2px solid var(--pink);
+  background: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 1px; transition: all 0.15s ease;
+}
+.p2-option.selected .p2-option-circle { background: var(--pink); border-color: var(--pink); }
+.p2-option-circle svg { display: none; }
+.p2-option.selected .p2-option-circle svg { display: block; }
+.p2-option-text { font-size: 14px; line-height: 1.5; }
+.p2-option.selected .p2-option-text { color: var(--cream); }
+.p2-nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 20px 24px; }
+.p2-back {
+  color: var(--burgundy); font-size: 13px; font-weight: 500;
+  cursor: pointer; background: none; border: none;
+  font-family: var(--font-body); opacity: 0.7; transition: opacity 0.15s;
+}
+.p2-back:hover { opacity: 1; }
+.p2-back:disabled { opacity: 0.3; cursor: default; }
+
+/* ============================================================
+   PAGE 3 — OPT-IN
+   ============================================================ */
+#page3 { justify-content: center; }
+
+.p3-hero {
+  background: var(--deep-burg);
+  width: 100%; max-width: 520px;
+  padding: 52px 32px 48px;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  gap: 20px; position: relative;
+  border-radius: var(--radius-hero);
+  box-shadow: var(--shadow-hero);
+  overflow: hidden;
+}
+.p3-hero .card-hero-inner { border-color: rgba(243,159,169,0.5); }
+.p3-headline {
+  color: var(--cream);
+  font-family: var(--font-head);
+  font-weight: 900;
+  font-size: clamp(32px, 8vw, 48px);
+  line-height: 1.1;
+}
+.p3-headline-italic {
+  color: var(--pink);
+  font-family: var(--font-body);
+  font-style: italic;
+  font-weight: 700;
+  display: block;
+}
+.p3-subhead { color: var(--cream); opacity: 0.8; font-size: 15px; line-height: 1.55; max-width: 360px; }
+.p3-form-card {
+  background: var(--cream);
+  border: 1px solid var(--burgundy);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 28px 24px 24px;
+  width: 100%; max-width: 380px;
+  display: flex; flex-direction: column; gap: 16px; text-align: left;
+}
+.p3-field-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--burgundy); display: block; margin-bottom: 6px; }
+.p3-input {
+  width: 100%; padding: 12px 14px;
+  background: var(--white); border: 1px solid var(--burgundy); border-radius: 10px;
+  font-family: var(--font-body); font-size: 15px; color: var(--body);
+  outline: none; transition: box-shadow 0.15s ease;
+}
+.p3-input:focus { box-shadow: 3px 3px 0 var(--burgundy); }
+.p3-no-spam { text-align: center; font-size: 10px; letter-spacing: 0.1em; color: var(--burgundy); opacity: 0.6; text-transform: uppercase; }
+
+/* ============================================================
+   PAGE 4 — RESULT
+   ============================================================ */
+#page4 { align-items: center; padding-bottom: 80px; }
+
+.p4-wrap { width: 100%; max-width: 580px; display: flex; flex-direction: column; gap: 20px; }
+
+/* Result hero */
+.p4-hero {
+  background: var(--pink);
+  padding: 52px 28px 44px;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  gap: 18px; position: relative;
+  border-radius: var(--radius-hero);
+  box-shadow: var(--shadow-hero);
+  overflow: hidden;
+}
+.p4-hero .card-hero-inner { border-color: rgba(84,17,15,0.35); }
+.p4-archetype-label { color: var(--burgundy); font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; position: relative; z-index: 3; }
+.p4-hero-headline {
+  font-family: var(--font-head);
+  font-weight: 900;
+  font-size: clamp(46px, 12vw, 62px);
+  line-height: 1.05;
+  color: var(--burgundy);
+  position: relative; z-index: 3;
+}
+.p4-hero-headline .archetype-name {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-weight: 700;
+  display: block;
+}
+.p4-intro { font-size: 15px; line-height: 1.6; color: var(--burgundy); opacity: 0.9; max-width: 420px; position: relative; z-index: 3; }
+.p4-energy-pill {
+  background: var(--burgundy);
+  color: var(--cream);
+  border-radius: var(--radius-pill);
+  padding: 12px 24px;
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 14px; line-height: 1.4; text-align: center;
+  display: inline-block; max-width: 380px;
+  border: 1px solid var(--deep-burg);
+  position: relative; z-index: 3;
+}
+
+/* Gap card */
+.p4-gap-card { background: var(--white); border: 1px solid var(--burgundy); border-radius: var(--radius-card); box-shadow: var(--shadow-card); padding: 32px 24px 28px; }
+.p4-gap-heading-area { text-align: center; margin-bottom: 24px; }
+.p4-gap-ornament { color: var(--pink); font-size: 14px; letter-spacing: 0.3em; display: block; margin-bottom: 4px; }
+.p4-gap-title { font-family: var(--font-serif); font-size: 28px; color: var(--body); margin: 4px 0; }
+.p4-gap-divider { border: none; border-top: 1.5px dashed var(--pink); margin: 10px auto; width: 60%; }
+.p4-gap-body-row { display: flex; gap: 16px; align-items: flex-start; }
+.p4-gap-left { flex: 1; }
+.p4-gap-word { font-family: var(--font-serif); font-size: clamp(32px,8vw,46px); color: var(--burgundy); line-height: 1; margin-bottom: 8px; }
+.p4-gap-subline { font-size: 13px; line-height: 1.5; color: var(--body); opacity: 0.75; }
+.p4-gap-stat { background: var(--burgundy); color: var(--cream); border-radius: var(--radius-sm); padding: 16px 20px; text-align: center; min-width: 100px; }
+.p4-gap-pct { font-family: var(--font-serif); font-size: 36px; line-height: 1; color: var(--cream); }
+.p4-gap-pct-label { font-size: 11px; opacity: 0.7; margin-top: 4px; }
+.p4-gap-bar-wrap { margin-top: 20px; }
+.p4-gap-bar-track { display: flex; height: 10px; border-radius: 999px; overflow: hidden; border: 1px solid var(--burgundy); }
+.p4-gap-bar-fill-burg { background: var(--burgundy); }
+.p4-gap-bar-fill-pink { background: var(--pink); }
+.p4-gap-bar-labels { display: flex; justify-content: space-between; margin-top: 6px; }
+.p4-gap-bar-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; color: var(--body); opacity: 0.65; text-transform: uppercase; }
+
+/* Accordions */
+.accordion-card { background: var(--white); border: 1px solid var(--burgundy); border-radius: var(--radius-card); box-shadow: var(--shadow-card); overflow: hidden; }
+.accordion-card summary {
+  display: flex; align-items: center; gap: 14px; padding: 20px 22px;
+  cursor: pointer; list-style: none; -webkit-user-select: none; user-select: none;
+}
+.accordion-card summary::-webkit-details-marker { display: none; }
+.accordion-num { width: 34px; height: 34px; min-width: 34px; border-radius: 50%; background: var(--burgundy); color: var(--cream); font-size: 10px; font-weight: 700; letter-spacing: 0.05em; display: flex; align-items: center; justify-content: center; }
+.accordion-summary-text { flex: 1; }
+.accordion-label-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--burgundy); display: block; margin-bottom: 2px; }
+.accordion-title { font-size: 15px; font-weight: 600; color: var(--body); }
+.accordion-chevron { width: 20px; height: 20px; color: var(--burgundy); transition: transform 250ms ease; flex-shrink: 0; }
+details[open] .accordion-chevron { transform: rotate(180deg); }
+.accordion-body { padding: 20px 22px 24px; border-top: 1px solid rgba(84,17,15,0.12); }
+/* Clean italic for lie quotes */
+.accordion-lie-quote { font-family: var(--font-body); font-style: italic; font-size: 18px; color: var(--burgundy); line-height: 1.5; margin-bottom: 12px; }
+.accordion-stake { font-family: var(--font-serif); font-size: 20px; color: var(--burgundy); line-height: 1.4; margin-bottom: 12px; }
+.accordion-move-directive { font-family: var(--font-serif); font-size: 20px; color: var(--burgundy); line-height: 1.4; margin-bottom: 16px; }
+.accordion-body-text { font-size: 14px; line-height: 1.65; color: var(--body); opacity: 0.85; }
+.move-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+.move-action { background: var(--cream); border: 1px solid var(--pink); border-radius: 12px; padding: 14px 16px; display: flex; gap: 10px; align-items: flex-start; }
+.move-action-star { color: var(--burgundy); font-size: 14px; margin-top: 2px; min-width: 14px; }
+.move-action-title { font-weight: 600; font-size: 14px; color: var(--burgundy); margin-bottom: 4px; }
+.move-action-body { font-size: 13px; line-height: 1.5; color: var(--body); opacity: 0.8; }
+
+/* Tab section */
+.p4-tab-card { background: var(--deep-burg); border-radius: var(--radius-card); box-shadow: var(--shadow-card); padding: 36px 28px 32px; position: relative; overflow: hidden; }
+.p4-tab-inner { border: 1px solid rgba(243,159,169,0.35); border-radius: 12px; position: absolute; inset: 8px; pointer-events: none; }
+.p4-tab-label { color: var(--pink); font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 12px; position: relative; }
+.p4-tab-intro-line { font-family: var(--font-serif); font-size: 18px; color: var(--cream); margin-bottom: 16px; position: relative; }
+.p4-tab-body { font-size: 15px; line-height: 1.65; color: var(--cream); opacity: 0.85; margin-bottom: 12px; position: relative; }
+.p4-cost-box { background: var(--burgundy); border: 1.5px solid var(--pink); border-radius: 12px; box-shadow: var(--shadow-pink); padding: 20px 18px; margin: 20px 0; position: relative; }
+.p4-cost-label { color: var(--pink); font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 10px; display: block; }
+.p4-cost-body { font-size: 14px; line-height: 1.65; color: var(--cream); }
+.cost-hl { background: var(--pink); color: var(--burgundy); font-weight: 700; padding: 1px 5px; border-radius: 4px; }
+.p4-tab-close {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 16px; color: var(--cream); opacity: 0.9; line-height: 1.6; position: relative;
+}
+
+/* Upsell box */
+.p4-upsell { background: var(--burgundy); border-radius: var(--radius-hero); box-shadow: var(--shadow-hero); padding: 40px 28px 36px; position: relative; overflow: hidden; }
+.p4-upsell-inner { border: 1px solid rgba(243,159,169,0.45); border-radius: 14px; position: absolute; inset: 10px; pointer-events: none; }
+.upsell-content { position: relative; text-align: center; }
+
+.countdown-pill { background: var(--cream); border: 1px solid var(--burgundy); border-radius: var(--radius-pill); padding: 16px 28px; box-shadow: var(--shadow-sm); text-align: center; margin: 0 auto 4px; display: block; width: 100%; max-width: 360px; }
+.countdown-label { color: var(--burgundy); font-size: 9px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 6px; display: block; }
+.countdown-time { font-family: var(--font-serif); font-size: 36px; color: var(--burgundy); line-height: 1; letter-spacing: 0.05em; display: block; }
+.countdown-sublabel { color: var(--burgundy); font-size: 9px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 4px; opacity: 0.6; display: block; }
+.countdown-expired { font-size: 13px; color: var(--burgundy); font-family: var(--font-body); font-style: italic; }
+
+.upsell-inv-label { color: var(--pink); font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; display: block; margin: 20px 0 8px; }
+.upsell-title-1 { font-family: var(--font-serif); font-size: 28px; color: var(--cream); line-height: 1.2; }
+.upsell-title-2 { font-family: var(--font-body); font-style: italic; font-weight: 600; font-size: 22px; color: var(--pink); display: block; margin-top: 2px; }
+.upsell-commit-row { margin: 16px 0 8px; }
+.upsell-commit-old { color: var(--cream); opacity: 0.5; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: line-through; display: block; }
+.upsell-commit-new { color: var(--pink); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; display: block; margin-top: 4px; }
+.upsell-commit-sub { font-family: var(--font-body); font-style: italic; font-size: 13px; color: var(--cream); opacity: 0.8; line-height: 1.5; margin: 8px auto 0; display: block; max-width: 320px; }
+
+.included-details { background: rgba(255,255,255,0.06); border: 1px solid rgba(243,159,169,0.3); border-radius: 12px; margin: 16px 0; overflow: hidden; }
+.included-summary { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; cursor: pointer; list-style: none; color: var(--cream); font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; -webkit-user-select: none; user-select: none; }
+.included-summary::-webkit-details-marker { display: none; }
+.included-chevron { transition: transform 250ms ease; color: var(--pink); flex-shrink: 0; }
+.included-details[open] .included-chevron { transform: rotate(180deg); }
+.included-body { padding: 0 18px 18px; text-align: left; }
+.included-bold { color: var(--cream); font-weight: 600; font-size: 14px; line-height: 1.5; margin-bottom: 12px; display: block; }
+.included-item { color: var(--cream); opacity: 0.85; font-size: 13px; line-height: 1.6; padding: 3px 0; display: flex; gap: 8px; }
+.included-star { color: var(--pink); min-width: 12px; }
+.included-link { color: var(--pink); font-size: 12px; text-decoration: underline; display: inline-block; margin: 12px 0; }
+.included-divider { border: none; border-top: 1px solid rgba(243,159,169,0.25); margin: 14px 0; }
+.included-bonus-label { color: var(--pink); font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; display: block; margin-bottom: 10px; }
+.included-bonus-item { color: var(--cream); font-size: 13px; line-height: 1.6; display: flex; gap: 8px; align-items: flex-start; padding: 3px 0; }
+.bonus-tag { background: var(--pink); color: var(--burgundy); font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 999px; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; margin-top: 2px; }
+
+.upsell-pricing { margin: 20px 0; }
+.upsell-pricing-label { color: var(--pink); font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; display: block; margin-bottom: 6px; }
+.upsell-price-old { color: var(--cream); opacity: 0.5; font-family: var(--font-serif); font-size: 22px; text-decoration: line-through; display: block; }
+.upsell-price-new { font-family: var(--font-serif); font-size: 48px; color: var(--cream); line-height: 1; display: block; margin: 4px 0; }
+.upsell-price-sub { color: var(--cream); opacity: 0.65; font-size: 13px; display: block; }
+.upsell-footer { color: var(--pink); font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 16px; opacity: 0.8; }
+
+/* "No, I don't want to change" subtle card */
+.no-thanks-card {
+  display: inline-block;
+  border: 1px solid rgba(243,159,169,0.3);
+  border-radius: 8px;
+  padding: 10px 24px;
+  color: var(--cream);
+  opacity: 0.5;
+  font-size: 13px;
+  text-decoration: underline;
+  text-decoration-color: rgba(243,159,169,0.4);
+  text-underline-offset: 3px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: opacity 0.2s ease;
+  margin-top: 14px;
+}
+.no-thanks-card:hover { opacity: 0.75; }
+
+/* ============================================================
+   PAGE 5 — SEEN IN SEASONS DOWNSELL
+   ============================================================ */
+#page5 { align-items: center; padding-bottom: 80px; }
+
+.p5-wrap { width: 100%; max-width: 580px; display: flex; flex-direction: column; gap: 20px; }
+
+/* A: Hero redirect card */
+.p5-hero {
+  background: var(--burgundy);
+  padding: 48px 28px 44px;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  gap: 16px; position: relative;
+  border-radius: var(--radius-hero);
+  box-shadow: var(--shadow-hero);
+  overflow: hidden;
+}
+.p5-hero .card-hero-inner { border-color: rgba(243,159,169,0.35); }
+.p5-hero-content { position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.p5-hero-headline {
+  color: var(--cream);
+  font-family: var(--font-serif);
+  font-size: clamp(32px, 8vw, 42px);
+  line-height: 1.08;
+  font-weight: 700;
+}
+.p5-hero-italic {
+  color: var(--pink);
+  font-family: var(--font-body);
+  font-style: italic;
+  font-weight: 700;
+  display: block;
+}
+.p5-hero-para { color: var(--cream); opacity: 0.88; font-size: 15px; line-height: 1.6; max-width: 400px; }
+.pink-italic { color: var(--pink); font-style: italic; }
+
+/* B: Offer card */
+.p5-offer-card {
+  background: var(--cream);
+  border: 1px solid var(--burgundy);
+  border-radius: var(--radius-hero);
+  box-shadow: var(--shadow-hero);
+  overflow: hidden;
+}
+.p5-stripe {
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg, var(--burgundy) 0px, var(--burgundy) 12px,
+    var(--cream) 12px, var(--cream) 24px
+  );
+}
+.p5-offer-body { padding: 28px 24px 32px; display: flex; flex-direction: column; gap: 20px; align-items: center; }
+
+/* B1: Timer pill */
+.p5-timer-pill {
+  background: var(--white);
+  border: 1px solid var(--deep-burg);
+  border-radius: var(--radius-pill);
+  box-shadow: 3px 3px 0 var(--deep-burg);
+  padding: 14px 28px;
+  text-align: center;
+  width: 100%;
+  max-width: 340px;
+  display: inline-block;
+}
+.p5-timer-label { color: var(--pink); font-size: 9px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; display: block; margin-bottom: 6px; }
+.timer-time { font-family: var(--font-serif); font-size: 32px; color: var(--burgundy); line-height: 1; display: block; letter-spacing: 0.05em; }
+.timer-sub { color: var(--burgundy); font-size: 9px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.6; display: block; margin-top: 4px; }
+
+/* B2: Title block */
+.p5-title-block { text-align: center; }
+.p5-instead-label { color: var(--burgundy); font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.75; display: block; margin-bottom: 10px; }
+.p5-workshop-title { font-family: var(--font-serif); font-size: clamp(36px, 9vw, 46px); line-height: 1; color: var(--burgundy); font-weight: 700; }
+.p5-seasons-italic { font-family: var(--font-body); font-style: italic; font-weight: 700; }
+.p5-workshop-sub { display: block; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--burgundy); opacity: 0.7; margin-top: 8px; }
+
+/* B3: Positioning card */
+.p5-position-card {
+  background: var(--white);
+  border: 1px solid var(--pink);
+  border-radius: 14px;
+  box-shadow: 3px 3px 0 var(--burgundy);
+  padding: 18px 20px;
+  width: 100%;
+}
+.p5-position-card p { font-size: 14px; line-height: 1.65; color: var(--burgundy); }
+.body-italic { font-style: italic; font-family: var(--font-body); }
+
+/* B4: What you get */
+.p5-what-card {
+  background: var(--burgundy);
+  border-radius: 14px;
+  box-shadow: 3px 3px 0 var(--deep-burg);
+  padding: 22px 20px;
+  width: 100%;
+  text-align: center;
+}
+.p5-what-label { color: var(--pink); font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; display: block; margin-bottom: 10px; }
+.p5-what-sub { color: var(--cream); font-size: 14px; font-weight: 600; margin-bottom: 14px; }
+.p5-bullet-list { list-style: none; text-align: left; display: flex; flex-direction: column; gap: 8px; }
+.p5-bullet-list li {
+  color: var(--cream); font-size: 13px; line-height: 1.6; opacity: 0.9;
+  display: flex; gap: 8px; align-items: flex-start;
+}
+.p5-bullet-list li::before { content: "✦"; color: var(--pink); font-size: 12px; margin-top: 2px; flex-shrink: 0; }
+
+/* B5: Pricing */
+.p5-pricing { text-align: center; }
+.p5-price-label { color: var(--burgundy); font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; display: block; margin-bottom: 8px; }
+.p5-price-old { font-family: var(--font-serif); font-size: 28px; color: var(--burgundy); opacity: 0.45; text-decoration: line-through; display: block; }
+.p5-price-new { font-family: var(--font-serif); font-size: 64px; color: var(--burgundy); line-height: 1; letter-spacing: -2.5px; display: block; margin: 4px 0; font-weight: 700; }
+.p5-price-sub { font-size: 13px; color: var(--burgundy); opacity: 0.8; display: block; margin-bottom: 12px; }
+.p5-save-pill {
+  display: inline-block;
+  background: var(--pink);
+  color: var(--burgundy);
+  border: 1px solid var(--burgundy);
+  border-radius: var(--radius-pill);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 5px 16px;
+}
+
+/* B6: CTA */
+.p5-cta { width: 100%; padding: 17px 24px; font-size: 15px; display: flex; justify-content: center; }
+
+/* B7: Subtext */
+.p5-cta-sub { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--burgundy); opacity: 0.55; text-align: center; }
+
+/* B8: Decline */
+.p5-decline-divider { border: none; border-top: 1px dashed var(--pink); width: 100%; }
+.p5-decline-link {
+  color: var(--burgundy); font-size: 12px; opacity: 0.6; text-decoration: underline;
+  text-underline-offset: 3px; cursor: pointer; font-family: var(--font-body);
+  transition: opacity 0.2s; display: inline-block; text-align: center;
+}
+.p5-decline-link:hover { opacity: 0.9; }
+
+/* ============================================================
+   PAGE 6 — THE ROOM (FINAL DOWNSELL)
+   ============================================================ */
+#page6 { justify-content: center; padding-top: 32px; }
+
+.p6-card {
+  background: var(--burgundy);
+  width: 100%; max-width: 600px;
+  padding: 48px 28px 40px;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  gap: 20px; position: relative;
+  border-radius: var(--radius-hero);
+  box-shadow: var(--shadow-hero);
+  overflow: hidden;
+}
+.p6-card .card-hero-inner { border-color: rgba(243,159,169,0.35); }
+.p6-content { position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 18px; width: 100%; }
+.p6-headline { color: var(--cream); font-family: var(--font-serif); font-size: clamp(34px, 8vw, 44px); line-height: 1.05; font-weight: 700; }
+.p6-italic-pink { color: var(--pink); font-family: var(--font-body); font-style: italic; font-weight: 700; display: block; }
+.p6-body { color: var(--cream); opacity: 0.9; font-size: 15px; line-height: 1.6; max-width: 440px; }
+
+/* Offer sub-card */
+.p6-offer-card {
+  background: var(--cream);
+  border: 1px solid var(--burgundy);
+  border-radius: var(--radius-card);
+  box-shadow: 4px 4px 0 var(--deep-burg);
+  padding: 24px 22px 22px;
+  width: 100%; max-width: 460px;
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  text-align: center;
+}
+.p6-join-label { color: var(--burgundy); font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; display: block; }
+.p6-room-title { font-family: var(--font-serif); font-size: clamp(28px, 7vw, 36px); color: var(--burgundy); line-height: 1.1; font-weight: 700; }
+.p6-room-italic { font-family: var(--font-body); font-style: italic; font-weight: 700; }
+.p6-room-sub { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--burgundy); opacity: 0.7; }
+.p6-bullet-list { list-style: none; text-align: left; width: 100%; display: flex; flex-direction: column; gap: 8px; }
+.p6-bullet-list li { font-size: 13px; line-height: 1.6; color: var(--burgundy); display: flex; gap: 8px; align-items: flex-start; }
+.p6-bullet-list li::before { content: "✦"; color: var(--burgundy); opacity: 0.7; font-size: 11px; margin-top: 2px; flex-shrink: 0; }
+.p6-price-block { text-align: center; }
+.p6-free { font-family: var(--font-serif); font-size: 38px; color: var(--burgundy); line-height: 1; display: block; font-weight: 700; }
+.p6-no-catch { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--burgundy); opacity: 0.65; display: block; margin-top: 4px; }
+.p6-cta { width: 100%; padding: 16px 24px; font-size: 15px; display: flex; justify-content: center; }
+
+/* Signoff */
+.p6-signoff { font-family: var(--font-body); font-style: italic; font-size: 13px; color: var(--cream); opacity: 0.75; line-height: 1.6; position: relative; z-index: 3; }
+.p6-jess { font-family: var(--font-body); font-style: italic; font-weight: 600; font-size: 15px; color: var(--pink); position: relative; z-index: 3; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (min-width: 480px) {
+  .p2-question-card { padding: 28px 28px 24px; }
+  .p5-offer-body { padding: 32px 32px 36px; }
+}
+@media (max-width: 400px) {
+  .p4-gap-body-row { flex-direction: column; }
+  .p4-gap-stat { align-self: flex-start; min-width: unset; }
+  .p5-price-new { font-size: 52px; }
+}
+@media (min-width: 640px) {
+  .page { padding: 48px 32px 112px; }
+  .p1-hero { padding: 68px 52px 60px; }
+  .p3-hero { padding: 68px 52px 60px; }
+  .p4-hero { padding: 68px 40px 56px; }
+  .p4-wrap { max-width: 640px; }
+  .p5-hero { padding: 60px 40px 52px; }
+  .p5-wrap { max-width: 640px; }
+  .p6-card { padding: 64px 48px 52px; max-width: 680px; }
+  .p2-card { max-width: 600px; }
+  .p4-upsell { padding: 52px 40px 44px; }
+  .p5-offer-body { padding: 36px 40px 44px; }
+}
+
+/* ---- SITE FOOTER ---- */
+.site-footer {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  padding: 9px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  background: rgba(22, 6, 3, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 200;
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  color: rgba(244,232,216,0.65);
+  flex-wrap: wrap;
+}
+.footer-links { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+.footer-links a { color: rgba(244,232,216,0.65); text-decoration: underline; text-underline-offset: 2px; white-space: nowrap; }
+.footer-links a:hover { color: rgba(244,232,216,1); }
+.footer-copy { white-space: nowrap; color: rgba(244,232,216,0.5); }
+@media (max-width: 480px) {
+  .site-footer { padding: 7px 14px; font-size: 9.5px; gap: 4px; }
+  .footer-links { gap: 10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     PAGE 1 — LANDING
+     ============================================================ -->
+<section id="page1" class="page">
+  <div class="p1-hero">
+    <div class="card-hero-inner"></div>
+
+    <!-- Cherub top-left -->
+    <svg class="doodle" style="top:18px;left:18px;width:54px;height:54px;" viewBox="0 0 60 60" fill="none" stroke="#f4e8d8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="30" cy="13" r="9"/>
+      <circle cx="26" cy="11" r="1.2" fill="#f4e8d8" stroke="none"/>
+      <circle cx="34" cy="11" r="1.2" fill="#f4e8d8" stroke="none"/>
+      <path d="M26 16 Q30 18 34 16"/>
+      <path d="M18 28 Q24 22 30 21 Q36 22 42 28"/>
+      <path d="M12 34 Q8 28 12 22 Q16 18 20 22"/>
+      <path d="M48 34 Q52 28 48 22 Q44 18 40 22"/>
+      <path d="M18 28 Q16 36 18 42"/>
+      <path d="M42 28 Q44 36 42 42"/>
+      <path d="M22 44 Q30 52 38 44"/>
+    </svg>
+
+    <!-- Martini top-right -->
+    <svg class="doodle" style="top:18px;right:18px;width:50px;height:54px;" viewBox="0 0 52 58" fill="none" stroke="#f4e8d8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 8 L48 8 L26 34 Z"/>
+      <line x1="26" y1="34" x2="26" y2="52"/>
+      <line x1="14" y1="52" x2="38" y2="52"/>
+      <circle cx="40" cy="14" r="4"/>
+      <line x1="38" y1="12" x2="44" y2="7"/>
+    </svg>
+
+    <!-- Bow bottom-centre -->
+    <svg class="doodle" style="bottom:22px;left:50%;transform:translateX(-50%);width:64px;height:36px;" viewBox="0 0 72 38" fill="none" stroke="#f4e8d8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M36 19 Q20 10 8 14 Q2 19 8 24 Q20 28 36 19Z"/>
+      <path d="M36 19 Q52 10 64 14 Q70 19 64 24 Q52 28 36 19Z"/>
+      <circle cx="36" cy="19" r="3.5"/>
+      <path d="M33 22 Q28 30 24 34"/>
+      <path d="M39 22 Q44 30 48 34"/>
+    </svg>
+
+    <div style="position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;gap:22px;">
+      <span class="pill-pink-label">A Female Business Owner Diagnostic</span>
+      <h1 class="p1-headline">
+        The Success
+        <span class="p1-headline-italic">Setpoint Quiz</span>
+      </h1>
+      <p class="p1-subhead">You already know you're capable of more than your current revenue.</p>
+      <div class="p1-highlight">
+        This quiz reveals what's holding the gap open, and which version of you is keeping it that way.
+      </div>
+      <button class="pill pill-cream" onclick="startQuiz()" style="font-size:16px;padding:16px 40px;">
+        Start the quiz →
+      </button>
+      <span class="p1-meta">2 Minutes · 7 Questions</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE 2 — QUIZ
+     ============================================================ -->
+<section id="page2" class="page">
+  <div class="p2-card">
+    <div class="p2-stripe"></div>
+    <div class="p2-header">
+      <div class="p2-progress-row">
+        <span class="p2-q-label" id="q-label">Question 01 / 07</span>
+        <span class="p2-pct" id="q-pct">0%</span>
+      </div>
+      <div class="p2-progress-track">
+        <div class="p2-progress-fill" id="q-progress" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="p2-question-card">
+      <div class="p2-scenario-label">Scenario</div>
+      <p class="p2-question-text" id="q-text"></p>
+      <div class="p2-options" id="q-options"></div>
+    </div>
+    <div class="p2-nav">
+      <button class="p2-back" id="q-back" onclick="quizBack()">← Back</button>
+      <button class="pill pill-burgundy" id="q-next" onclick="quizNext()">Next →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE 3 — OPT-IN
+     ============================================================ -->
+<section id="page3" class="page">
+  <div class="p3-hero">
+    <div class="card-hero-inner" style="border-color:rgba(243,159,169,0.5);"></div>
+
+    <!-- Envelope top-left -->
+    <svg class="doodle" style="top:20px;left:20px;width:54px;height:44px;" viewBox="0 0 60 48" fill="none" stroke="#f39fa9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="6" width="54" height="38" rx="4"/>
+      <path d="M3 6 L30 28 L57 6"/>
+      <path d="M3 44 L22 26"/>
+      <path d="M57 44 L38 26"/>
+    </svg>
+
+    <!-- Key bottom-right -->
+    <svg class="doodle" style="bottom:20px;right:20px;width:50px;height:54px;" viewBox="0 0 54 60" fill="none" stroke="#f39fa9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="18" cy="20" r="14"/>
+      <circle cx="18" cy="20" r="6"/>
+      <line x1="29" y1="30" x2="50" y2="52"/>
+      <line x1="41" y1="43" x2="46" y2="47"/>
+      <line x1="37" y1="47" x2="33" y2="52"/>
+    </svg>
+
+    <div style="position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;gap:20px;">
+      <div class="pill-pink-label anim-jiggle" style="display:inline-block;">✦ Result Ready ✦</div>
+      <h2 class="p3-headline">
+        Your archetype
+        <span class="p3-headline-italic">is unlocked.</span>
+      </h2>
+      <p class="p3-subhead">Drop your details below and we'll reveal which Success Setpoint is keeping you stuck, plus the exact next move to break it.</p>
+
+      <!-- PLACEHOLDER FORM — replace with Kajabi form embed later -->
+      <form class="p3-form-card" onsubmit="submitOptIn(event)">
+        <div>
+          <label class="p3-field-label" for="p3-name">First Name</label>
+          <input class="p3-input" id="p3-name" type="text" placeholder="Your first name" autocomplete="given-name" required>
+        </div>
+        <div>
+          <label class="p3-field-label" for="p3-email">Email</label>
+          <input class="p3-input" id="p3-email" type="email" placeholder="your@email.com" autocomplete="email" required>
+        </div>
+        <button type="submit" class="pill pill-burgundy" style="width:100%;padding:16px 24px;font-size:15px;">
+          Reveal my archetype →
+        </button>
+        <p class="p3-no-spam">No spam. Unsubscribe anytime.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE 4 — RESULT (filled dynamically)
+     ============================================================ -->
+<section id="page4" class="page">
+  <div class="p4-wrap" id="p4-content"></div>
+</section>
+
+<!-- ============================================================
+     PAGE 5 — SEEN IN SEASONS DOWNSELL
+     ============================================================ -->
+<section id="page5" class="page">
+  <div class="p5-wrap">
+
+    <!-- A: Hero redirect card -->
+    <div class="p5-hero">
+      <div class="card-hero-inner" style="border-color:rgba(243,159,169,0.35);"></div>
+
+      <!-- Waving hand top-left -->
+      <svg class="doodle" style="top:18px;left:18px;width:52px;height:52px;" viewBox="0 0 56 56" fill="none" stroke="#f4e8d8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 34 L20 16 Q20 12 24 12 Q28 12 28 16 L28 28"/>
+        <path d="M28 16 Q28 11 32 11 Q36 11 36 16 L36 28"/>
+        <path d="M36 18 Q36 13 40 13 Q44 13 43 19 L42 30"/>
+        <path d="M42 24 Q43 20 46 21 Q49 22 48 27 L46 34"/>
+        <path d="M22 34 Q20 44 26 46 L38 46 Q46 44 46 34"/>
+        <path d="M22 32 Q16 30 16 24 Q16 18 22 18 L22 22"/>
+        <path d="M8 14 Q10 10 13 14" opacity="0.5"/>
+        <path d="M4 22 Q7 16 11 22" opacity="0.35"/>
+      </svg>
+
+      <!-- Season cycle top-right -->
+      <svg class="doodle" style="top:18px;right:18px;width:52px;height:52px;" viewBox="0 0 56 56" fill="none" stroke="#f4e8d8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="28" cy="28" r="18"/>
+        <path d="M46 20 Q50 28 46 36"/>
+        <polyline points="48 34 46 36 44 33"/>
+        <circle cx="28" cy="10" r="1.5" fill="#f4e8d8" stroke="none"/>
+        <circle cx="46" cy="28" r="1.5" fill="#f4e8d8" stroke="none"/>
+        <circle cx="28" cy="46" r="1.5" fill="#f4e8d8" stroke="none"/>
+        <circle cx="10" cy="28" r="1.5" fill="#f4e8d8" stroke="none"/>
+      </svg>
+
+      <div class="p5-hero-content">
+        <span class="pill-pink-label">Wait, Before You Go</span>
+        <h2 class="p5-hero-headline">
+          Sorry I won't see you
+          <span class="p5-hero-italic">inside WMHQ!</span>
+        </h2>
+        <p class="p5-hero-para">Totally hear you. The membership isn't the right move for everyone right now.</p>
+        <p class="p5-hero-para">But before you click away, there's one thing I want to put in your hands. Because no matter which archetype you got, what you actually need is a framework that tells you <em class="pink-italic">what season you're in right now</em> and how to move in it.</p>
+      </div>
+    </div>
+
+    <!-- B: Offer card -->
+    <div class="p5-offer-card">
+      <div class="p5-stripe"></div>
+      <div class="p5-offer-body">
+
+        <!-- B1: Countdown timer -->
+        <div class="p5-timer-pill anim-shake">
+          <span class="p5-timer-label">⊹ One-Time Offer Expires In ⊹</span>
+          <div id="seasons-timer-display">
+            <span class="timer-time">05 : 00</span>
+            <span class="timer-sub">Min · Sec</span>
+          </div>
+        </div>
+
+        <!-- B2: Title block -->
+        <div class="p5-title-block">
+          <span class="p5-instead-label">Instead, I Recommend</span>
+          <h3 class="p5-workshop-title">Seen In <em class="p5-seasons-italic">Seasons</em></h3>
+          <span class="p5-workshop-sub">A Workshop</span>
+        </div>
+
+        <!-- B3: Positioning card -->
+        <div class="p5-position-card">
+          <p>The 3-step framework that teaches you how to build a business that thrives in <em class="body-italic">every season of life</em>. Identify your season. Use the right tools. Stop forcing strategies that don't match the moment you're actually in.</p>
+        </div>
+
+        <!-- B4: What you get -->
+        <div class="p5-what-card">
+          <span class="p5-what-label">⊹ What You Get ⊹</span>
+          <p class="p5-what-sub">A workshop that teaches you:</p>
+          <ul class="p5-bullet-list">
+            <li>The complete <strong>3-season Seen In Seasons framework</strong></li>
+            <li>How to identify exactly <strong>which season you're in right now</strong></li>
+            <li><strong>Strategic and subconscious tools</strong> for each season</li>
+            <li>A planning approach that <strong>adapts to your real life</strong></li>
+            <li>Access to <strong>WMHQ The Room</strong> (free community + monthly free trainings)</li>
+            <li><strong>Instant lifetime access</strong> to the replay</li>
+          </ul>
+        </div>
+
+        <!-- B5: Pricing -->
+        <div class="p5-pricing">
+          <span class="p5-price-label">Your Price Today</span>
+          <span class="p5-price-old" id="seasons-price-old">$47</span>
+          <span class="p5-price-new" id="seasons-price-new">$15</span>
+          <span class="p5-price-sub">One-time payment. Lifetime access.</span>
+          <span class="p5-save-pill" id="seasons-save">You Save $32</span>
+        </div>
+
+        <!-- B6: CTA — TODO: Replace href with Kajabi checkout URL -->
+        <a href="https://www.jessicapinili.com/offers/xzZV62go" target="_blank" rel="noopener noreferrer" id="seasons-cta" class="pill pill-burgundy p5-cta" onclick="trackExit('seasons')">
+          Yes, give me Seen In Seasons for $15 →
+        </a>
+
+        <!-- B7: Subtext -->
+        <p class="p5-cta-sub">One-Time Offer · Not Available After This Page</p>
+
+        <!-- B8: Decline -->
+        <hr class="p5-decline-divider">
+        <!-- TODO: Replace this with final URL to next page -->
+        <a href="#" class="p5-decline-link" onclick="goToRoom(event)">
+          No thanks, I'll pass on this too →
+        </a>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE 6 — THE ROOM (FINAL DOWNSELL)
+     ============================================================ -->
+<section id="page6" class="page">
+  <div class="p6-card">
+    <div class="card-hero-inner" style="border-color:rgba(243,159,169,0.35);"></div>
+
+    <!-- Open door top-left -->
+    <svg class="doodle" style="top:18px;left:18px;width:52px;height:52px;" viewBox="0 0 56 60" fill="none" stroke="#f4e8d8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 56 L6 10 L50 10 L50 56"/>
+      <path d="M6 10 L28 14 L28 56 L6 56 Z"/>
+      <circle cx="25" cy="33" r="2.5"/>
+      <line x1="6" y1="17" x2="10" y2="17.5"/>
+      <line x1="6" y1="46" x2="10" y2="46.5"/>
+      <line x1="32" y1="20" x2="42" y2="16" opacity="0.4"/>
+      <line x1="32" y1="28" x2="46" y2="26" opacity="0.3"/>
+      <line x1="32" y1="36" x2="44" y2="36" opacity="0.25"/>
+    </svg>
+
+    <!-- Heart with sparkles top-right -->
+    <svg class="doodle" style="top:14px;right:18px;width:52px;height:48px;" viewBox="0 0 56 52" fill="none" stroke="#f4e8d8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M28 46 Q8 32 8 20 Q8 12 16 11 Q22 10 28 17 Q34 10 40 11 Q48 12 48 20 Q48 32 28 46Z"/>
+      <line x1="6" y1="7" x2="6" y2="13"/>
+      <line x1="3" y1="10" x2="9" y2="10"/>
+      <line x1="48" y1="3" x2="48" y2="9"/>
+      <line x1="45" y1="6" x2="51" y2="6"/>
+      <line x1="52" y1="16" x2="52" y2="20"/>
+      <line x1="50" y1="18" x2="54" y2="18"/>
+    </svg>
+
+    <div class="p6-content">
+      <span class="pill-pink-label" style="border:1px solid var(--burgundy);">One Last Thing</span>
+
+      <h2 class="p6-headline">
+        Free trainings,
+        <span class="p6-italic-pink">on me.</span>
+      </h2>
+
+      <p class="p6-body">Even if today isn't the day, you're welcome in the room.</p>
+
+      <!-- Offer sub-card -->
+      <div class="p6-offer-card">
+        <span class="p6-join-label">Join</span>
+        <h3 class="p6-room-title">WMHQ: <em class="p6-room-italic">The Room</em></h3>
+        <span class="p6-room-sub">Free Community · Free Monthly Live Trainings</span>
+        <ul class="p6-bullet-list">
+          <li>Free monthly live trainings on strategy and subconscious</li>
+          <li>A community of female business owners doing the work</li>
+          <li>Always-on access, on your own time</li>
+        </ul>
+        <div class="p6-price-block">
+          <span class="p6-free">Free</span>
+          <span class="p6-no-catch">No Card. No Catch.</span>
+        </div>
+        <!-- TODO: Replace href with Kajabi community signup URL -->
+        <a href="https://www.jessicapinili.com/offers/KvnzHon7" target="_blank" rel="noopener noreferrer" class="pill pill-burgundy p6-cta" onclick="trackExit('theroom')">
+          Join The Room →
+        </a>
+      </div>
+
+      <p class="p6-signoff">Whenever you're ready, the door is open.</p>
+      <span class="p6-jess">Jess x</span>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-links">
+    <a href="https://www.jessicapinili.com/jpinili-terms-conditions" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</a>
+    <a href="https://www.womanmasteryhq.com" target="_blank" rel="noopener noreferrer">Woman Mastery HQ Membership</a>
+  </div>
+  <span class="footer-copy">Jessica Pinili &copy;</span>
+</footer>
+
+<script>
+
+/* ================================================================
+   ARCHETYPE DATA — no em dashes, clean italic notes
+   ================================================================ */
+const archetypes = {
+  refiner: {
+    name: "Refiner",
+    energy: "Energy: Kris Jenner rebranding the entire family every six months.",
+    intro: "You're the most creative of the four Setpoints. You can see what something could be before anyone else, and that gift is also what's keeping you stuck. You don't have a talent problem. You have a completion problem.",
+    gapWord: "Strategy",
+    gapPercent: 82, gapOtherPercent: 18,
+    gapSubline: "Your subconscious is wired to build. But building without selling is just expensive hobby work.",
+    lie: "“If I just optimise it one more time, it’ll finally work.”",
+    lieBody: "This is the belief that keeps you in motion while keeping you broke. Every time you rebuild, you reset the clock on your sales data. You can't optimise what you haven't actually run. The next version will always feel like the better bet, until it doesn't convert either, and you reach for the next improvement.",
+    pattern: "Refining is your dopamine hit.",
+    patternBody: "Your nervous system gets lit up by the creative phase. The new idea, the fresh positioning, the redesign. The problem is that selling a thing you've already built feels flat by comparison. So unconsciously, you create reasons to go back to the build phase. The market never gets a real run. And your revenue reflects that.",
+    move: "Pick one offer. Sell it without modification for 90 days.",
+    moveActions: [
+      { title: "Lock the current offer for 90 days.", body: "No new sales pages, no refreshes, no 'quick tweaks.' It ships as-is. The data you get from selling it unchanged is worth more than any improvement you'd make before you have that data." },
+      { title: "Set a no-build rule on Mondays and Tuesdays.", body: "Replace that time with outreach, content that sells, and direct conversations. The Refiner avoids revenue-generating activity by staying in build mode. Block it." },
+      { title: "Run a refinement audit on what you've already built.", body: "List every offer, asset and funnel you've created in the last 12 months. Calculate how much revenue each one has generated. That number tells you what needs refining, and what needs selling." }
+    ],
+    tabBody1: "You'll read this, feel deeply seen, screenshot the Kris Jenner line, and then go home and open a new Canva file to 'just update the cover.' That's the pattern. You're not broken. You're wired for creation. But creation without commitment to selling is just elaborate procrastination with prettier branding.",
+    tabBody2: "The Refiner's version of hard work is building. And because it feels productive, it fools you. You leave every work session feeling accomplished, and then check your bank account and wonder why nothing's moved. The gap isn't in your product quality. It's in your tolerance for selling the same thing long enough to find out if it works.",
+    cost: "Every quarter you stay in the rebuild loop costs you between <span class='cost-hl'>$10K and $30K</span> in offers that never got a real chance to convert. Over a year, that's the difference between where you are now and a <span class='cost-hl'>six-figure year</span>, built on the thing you already have.",
+    tabClose: "The Refiner doesn't have a creativity problem. She has a follow-through problem she's learned to call creativity. The next version of you doesn't need a new offer. She needs to sell this one."
+  },
+  spiker: {
+    name: "Spiker",
+    energy: "Energy: Kylie Jenner's lip kit launch energy. Cannot do a Tuesday.",
+    intro: "You know how to create momentum. You've had the big months. You know what it feels like when the machine works. The problem is that you've been chasing that feeling rather than building the infrastructure that makes it a baseline, not a highlight.",
+    gapWord: "Subconscious",
+    gapPercent: 78, gapOtherPercent: 22,
+    gapSubline: "The strategy is there. Your nervous system needs a different story.",
+    lie: "“I just need one more good launch to get back on track.”",
+    lieBody: "The belief that the next spike will solve the infrastructure problem is the trap. It won't. A great launch month is not a business model. It gives you breathing room and dopamine, then the quiet comes back harder because now you've proven you can do it, and the baseline still doesn't reflect that.",
+    pattern: "Your income pattern is a symptom of a self-worth pattern.",
+    patternBody: "The feast and famine cycle isn't a marketing problem. It's a story your nervous system is running. The belief that visibility has to be earned in concentrated bursts, that you can't just 'be available' in the market without a big moment to justify it. Daily selling feels exposing. Launches feel safer because there's an event to hide behind.",
+    move: "Sell something small every single week for the next 8 weeks. No launch required.",
+    moveActions: [
+      { title: "Identify your lowest-barrier offer.", body: "What can someone buy from you without getting on a call, attending a webinar, or waiting for a launch window? That is your retention tool. Price it to be a no-brainer, and promote it weekly." },
+      { title: "Create a minimum viable visibility standard.", body: "Define what consistent looks like for you, not what it looks like at launch capacity. Two emails a week. Three pieces of content. One direct outreach. Small, non-negotiable, recurring." },
+      { title: "Map your last 12 months of revenue against your launch calendar.", body: "You'll see it immediately. The spikes and the silence. That visual is your business case for building a baseline. Keep it somewhere visible." }
+    ],
+    tabBody1: "You'll read this, recognise the pattern completely, and decide that the solution is to plan a better, more strategic launch next quarter. That's the Spiker's version of avoidance. It looks like ambition. The real work is in the unsexy middle: showing up in the market on a Tuesday when there's no campaign live, no deadline, no reason except that it's what consistent businesses do.",
+    tabBody2: "The gap between where you are and where your revenue should be is not a launch gap. It's a baseline gap. You've built the ceiling. You haven't built the floor. And until you do, every big month is just buying you time before the next quiet one.",
+    cost: "Each feast-and-famine cycle costs you between <span class='cost-hl'>$15K and $40K</span> per year in revenue that evaporates in the quiet months, revenue that a consistent baseline would have captured. That's the difference between occasional income and a <span class='cost-hl'>six-figure year</span> that actually holds.",
+    tabClose: "The Spiker doesn't have a strategy problem. She has a baseline problem she's learned to outsprint with launches. The next version of you doesn't need a bigger launch. She needs a floor that catches her between them."
+  },
+  studier: {
+    name: "Studier",
+    energy: "Energy: Kim Kardashian studying for the bar exam for seven years.",
+    intro: "You are deeply capable. You know this. You also know exactly what you're supposed to do, and you're not doing it. Not because you're lazy. Because somewhere underneath all that knowledge is a fear that doing everything right and still not being chosen would be unbearable. So you stay in preparation. Preparation is safe.",
+    gapWord: "Subconscious",
+    gapPercent: 85, gapOtherPercent: 15,
+    gapSubline: "You have the knowledge. The thing blocking you isn't strategy.",
+    lie: "“I need one more piece of clarity before I can really go for it.”",
+    lieBody: "Clarity is not the prerequisite for action. Action is how you get clarity. The Studier has inverted this, building a story where more information is the bridge to confidence. But confidence doesn't come from courses. It comes from evidence. And evidence requires doing the thing before you feel ready.",
+    pattern: "You're not preparing. You're hiding in preparation.",
+    patternBody: "The studying feels productive. It is productive, in isolation. But when it becomes the default response to fear, when every time selling feels uncomfortable you reach for a new framework, it stops being self-development and starts being self-protection. You're not growing your business. You're growing your knowledge base. Those are not the same thing.",
+    move: "Sell before you feel ready. Once. This week.",
+    moveActions: [
+      { title: "Identify one person you could reach out to today about your offer.", body: "Not pitch them publicly. Not run an ad. One real conversation. The Studier's fastest path to confidence is a real human saying yes, and you can't get that from a training." },
+      { title: "Set a study budget and stick to it.", body: "No new courses, programs or frameworks until you have made ten genuine offers on your current one. Learning without selling is borrowing against your future revenue." },
+      { title: "Write your offer out loud, as if you're explaining it to a friend.", body: "No sales page. No copy framework. Just what it is, who it's for, and what changes. Record yourself if you have to. The Studier needs to hear herself sound like she knows what she's doing, because she does." }
+    ],
+    tabBody1: "You'll finish reading this, feel a strange mix of seen and defensive, and then go open the next module in a program you're halfway through. That's okay. I'm not here to shame the studying. I'm here to point out that you are using information as armour against the one thing that actually changes revenue: being in front of people and making offers.",
+    tabBody2: "The Studier's version of courage is not learning more. It's pressing send before she's sure it's perfect. It's posting before she's certain it'll land. It's making the offer before she's decided she's ready. The readiness never arrives on its own. You have to manufacture it by doing the thing anyway.",
+    cost: "Every month spent preparing instead of selling costs you between <span class='cost-hl'>$5K and $20K</span> in offers that exist in your head but not in the market. Over a year, that gap compounds into the distance between current revenue and a <span class='cost-hl'>six-figure year</span> that was always available to you.",
+    tabClose: "The Studier doesn't have a knowledge problem. She has a readiness problem she's learned to call research. The next version of you doesn't need another course. She needs to make the offer."
+  },
+  overworker: {
+    name: "Overworker",
+    energy: "Energy: Khloé Kardashian deep-cleaning the kitchen before handling anything emotional.",
+    intro: "You are the most dependable of the four Setpoints. Your work ethic is not the problem. It never was. The problem is that you've built a business model that requires your constant presence, your constant output, your constant effort. And somewhere in that structure is a belief that rest is a liability and slowing down means falling behind.",
+    gapWord: "Strategy",
+    gapPercent: 80, gapOtherPercent: 20,
+    gapSubline: "Working harder is not the path. You need leverage, not more hours.",
+    lie: "“If I just work harder, the results have to come.”",
+    lieBody: "They don't. Effort and revenue are not the same currency. You've been operating as if they are, and the mismatch between your hours and your income is the evidence. Hard work is not a business strategy. It's an input. And without the right output mechanisms attached to it, it just produces burnout with excellent systems.",
+    pattern: "You've optimised for doing, not for earning.",
+    patternBody: "The Overworker's business is full of activity that feels necessary. Email management, client delivery, admin, content. All of it is real work. But very little of it is revenue-generating work. And because you're busy, it's easy to mistake motion for progress. The truth is that you could work half the hours and make more money, if the hours were pointed at the right things.",
+    move: "Do a revenue audit. Map every hour to income. Cut the rest.",
+    moveActions: [
+      { title: "Time-track your next three working days in 30-minute blocks.", body: "Label each block: revenue-generating (selling, following up, creating offers) or operations (admin, delivery, everything else). The ratio will tell you everything. Most Overworkers are spending less than 15% of their time on income-generating activity." },
+      { title: "Identify your one highest-leverage offer and make it the centre of your week.", body: "What is the one thing you sell that generates the most revenue per hour of your time? That gets Monday, Tuesday and Wednesday morning. Everything else gets the rest." },
+      { title: "Write a Stop Doing list.", body: "Not a to-do list. A stop-doing list. Every task you do out of habit, out of guilt, or because it feels productive but isn't. Hand one thing from that list to a VA, tool or template this week." }
+    ],
+    tabBody1: "You'll read this, agree with all of it, feel briefly inspired, and then check your inbox because there's something urgent in there that only you can handle. That's the pattern. The Overworker stays busy because busy feels responsible, and slowing down feels like falling behind. But you're not falling behind. You're running fast in a direction that isn't increasing your revenue.",
+    tabBody2: "The real cost of the overwork pattern isn't burnout, though that's coming if it isn't already here. It's opportunity cost. Every hour spent on tasks that don't generate revenue is an hour not spent on the things that would. You're not behind because you're not working hard enough. You're behind because your hard work isn't pointed at income.",
+    cost: "The Overworker loses between <span class='cost-hl'>$20K and $50K</span> per year in foregone revenue, not because she isn't working, but because so few of her hours are pointed at income-generating activity. That's the gap between exhausted and stagnant, and a <span class='cost-hl'>six-figure year</span> built on leverage instead of hours.",
+    tabClose: "The Overworker doesn't have a work ethic problem. She has a direction problem she's learned to call dedication. The next version of you doesn't need to work harder. She needs to work on the right things."
+  }
+};
+
+/* ================================================================
+   QUIZ DATA
+   ================================================================ */
+const questions = [
+  {
+    text: "Looking at your business right now, the most honest sentence is:",
+    options: [
+      { text: "Something was working, but I'm reworking it because I think I can make it better.", archetype: "refiner" },
+      { text: "I've had big months, but I can't seem to make the income consistent.", archetype: "spiker" },
+      { text: "I know exactly what I need to do. I'm just not doing it.", archetype: "studier" },
+      { text: "I'm working really hard, but the revenue doesn't match the hours.", archetype: "overworker" }
+    ]
+  },
+  {
+    text: "It's Monday morning. You have three focused hours. What do you actually do?",
+    options: [
+      { text: "Rebuild the sales page I just launched. Something feels off.", archetype: "refiner" },
+      { text: "Plan a launch. I need cash through the door this month.", archetype: "spiker" },
+      { text: "Watch a new training I bought. I want to get it right first.", archetype: "studier" },
+      { text: "Clear my inbox and admin so I can start fresh.", archetype: "overworker" }
+    ]
+  },
+  {
+    text: "Your most recent significant business purchase was:",
+    options: [
+      { text: "A new course, program or framework I'm halfway through.", archetype: "studier" },
+      { text: "A new template, software or rebrand asset to refine what I already have.", archetype: "refiner" },
+      { text: "An ads spend, launch contractor or sales support to push a launch.", archetype: "spiker" },
+      { text: "A VA, OBM or admin tool to help me keep up with the workload.", archetype: "overworker" }
+    ]
+  },
+  {
+    text: "When you imagine selling your current offer every day for 30 days straight, the feeling is:",
+    options: [
+      { text: "Boredom. I'd rather refresh it or build something new.", archetype: "refiner" },
+      { text: "Resistance. I don't feel ready to sell it that confidently yet.", archetype: "studier" },
+      { text: "Pressure. I'd rather stack it inside a big launch moment.", archetype: "spiker" },
+      { text: "Exhaustion. I don't have time to add daily selling on top of everything.", archetype: "overworker" }
+    ]
+  },
+  {
+    text: "Your revenue this year looks most like:",
+    options: [
+      { text: "Big spikes and quiet months. Feast and famine.", archetype: "spiker" },
+      { text: "Steady but smaller than it should be for the hours I'm putting in.", archetype: "overworker" },
+      { text: "Inconsistent because I haven't fully launched what I've been planning.", archetype: "studier" },
+      { text: "Up and down because I keep changing what I sell.", archetype: "refiner" }
+    ]
+  },
+  {
+    text: "The thought that quietly runs your business decisions is:",
+    options: [
+      { text: "I need one more piece of clarity before I can really go for it.", archetype: "studier" },
+      { text: "If I just optimise this one more time, it'll finally work.", archetype: "refiner" },
+      { text: "If I just work harder, the results have to come.", archetype: "overworker" },
+      { text: "I just need one more good launch to get back on track.", archetype: "spiker" }
+    ]
+  },
+  {
+    text: "If you had to be brutally honest about what scares you most:",
+    options: [
+      { text: "Being fully seen, doing the work, and still not being chosen.", archetype: "studier" },
+      { text: "Committing to one thing and finding out it isn't the right one.", archetype: "refiner" },
+      { text: "Slowing down and watching the income drop while I rebuild a baseline.", archetype: "spiker" },
+      { text: "Stopping the hard work and realising the hard work wasn't the point.", archetype: "overworker" }
+    ]
+  }
+];
+
+/* ================================================================
+   STATE HELPERS
+   ================================================================ */
+let currentQ = 0;
+let answers  = [];
+
+function getLS(k)    { try { return localStorage.getItem(k); } catch(e) { return null; } }
+function setLS(k, v) { try { localStorage.setItem(k, v); } catch(e) {} }
+
+function loadState() {
+  const a = getLS('ssq_answers');
+  const q = getLS('ssq_currentQ');
+  if (a) answers  = JSON.parse(a);
+  if (q) currentQ = parseInt(q);
+}
+function saveState() {
+  setLS('ssq_answers',  JSON.stringify(answers));
+  setLS('ssq_currentQ', String(currentQ));
+}
+
+/* ================================================================
+   PAGE NAVIGATION
+   ================================================================ */
+function showPage(n) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active','visible'));
+  const target = document.getElementById('page' + n);
+  target.classList.add('active');
+  requestAnimationFrame(() => requestAnimationFrame(() => target.classList.add('visible')));
+  window.scrollTo(0, 0);
+  setLS('ssq_page', String(n));
+  if (n === 5) setTimeout(initSeasonsTimer, 80);
+}
+
+function startQuiz() { showPage(2); renderQuestion(); }
+
+/* ================================================================
+   QUIZ
+   ================================================================ */
+function renderQuestion() {
+  const q = questions[currentQ];
+  const n = currentQ + 1;
+  const pct = Math.round((currentQ / questions.length) * 100);
+
+  document.getElementById('q-label').textContent    = 'Question ' + String(n).padStart(2,'0') + ' / 07';
+  document.getElementById('q-pct').textContent      = pct + '%';
+  document.getElementById('q-progress').style.width = pct + '%';
+  document.getElementById('q-text').textContent     = q.text;
+  document.getElementById('q-back').disabled        = (currentQ === 0);
+
+  const container = document.getElementById('q-options');
+  container.innerHTML = '';
+  const selected = answers[currentQ];
+
+  q.options.forEach(opt => {
+    const isSelected = selected === opt.archetype;
+    const div = document.createElement('div');
+    div.className = 'p2-option' + (isSelected ? ' selected' : '');
+    div.innerHTML =
+      '<div class="p2-option-circle">' +
+        '<svg width="10" height="8" viewBox="0 0 10 8" fill="none">' +
+          '<path d="M1 4l2.5 2.5L9 1" stroke="#54110f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '</svg>' +
+      '</div>' +
+      '<span class="p2-option-text">' + opt.text + '</span>';
+    div.addEventListener('click', () => {
+      answers[currentQ] = opt.archetype;
+      saveState();
+      renderQuestion();
+    });
+    container.appendChild(div);
+  });
+}
+
+function quizNext() {
+  if (!answers[currentQ]) return;
+  if (currentQ === questions.length - 1) {
+    setLS('ssq_result', calculateResult());
+    showPage(3);
+  } else {
+    currentQ++;
+    saveState();
+    renderQuestion();
+  }
+}
+
+function quizBack() {
+  if (currentQ === 0) return;
+  currentQ--;
+  saveState();
+  renderQuestion();
+}
+
+/* ================================================================
+   SCORING
+   ================================================================ */
+function calculateResult() {
+  const scores = { refiner: 0, spiker: 0, studier: 0, overworker: 0 };
+  answers.forEach((arch, i) => {
+    scores[arch] = (scores[arch] || 0) + (i === 0 ? 2 : 1);
+  });
+  const max  = Math.max(...Object.values(scores));
+  const tied = Object.keys(scores).filter(k => scores[k] === max);
+  if (tied.length === 1) return tied[0];
+  if (answers[6] && tied.includes(answers[6])) return answers[6];
+  return tied[0];
+}
+
+/* ================================================================
+   OPT-IN
+   ================================================================ */
+function submitToKajabi(name, email) {
+  const archetype = getLS('ssq_result') || '';
+  const KJB_FORMS = {
+    Refiner:    { id: '2149582559', token: '9YUL8g3mWEc9nwCM7Pu_lX4L_khctm3HhnEaEIdcgu_Xx2SfE-HJUP0QPCeV6hEzHAqvj0o8nZOHZw4h3eEI8A' },
+    Spiker:     { id: '2149582560', token: 'CDCPAwNa_O5707rLSStf-wlKZXKZZbd0zd5CDcVHvWKUypEkC4nVT2CzNlnjREvm7l00Ji9-GV70Q1jRpeSKJw' },
+    Studier:    { id: '2149582561', token: '6TM29zvcnmTs-CYORxlToAUgMvFMiuZJMR4a3lC-DAmq9vuM6zIT4MuDuNPMWI3x-DfPMdNzY7Bq-QpK_nfoVg' },
+    Overworker: { id: '2149582563', token: 'FRHso57IGpNcwC2XFyRj2Zz5yOpYl5sgb1m27c36Bz5lxKovUchkQDC2tegMamdTpu_LxmJ2r7nfDkMH6Bdb3w' },
+  };
+  const form_cfg = KJB_FORMS[archetype] || { id: '2149581985', token: '_1Tatfgl412EvGzimUZvpRATw9i8d8cUKqIw8J2lyLTp27lFOMZ8cDbY0FfuEo1WRiMS-sJ2mofgmbAF7QXRug' };
+  const iframeName = 'kjb-frame-' + Date.now();
+  const iframe = document.createElement('iframe');
+  iframe.name = iframeName;
+  iframe.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;border:0;';
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = 'https://www.jessicapinili.com/forms/' + form_cfg.id + '/form_submissions';
+  form.target = iframeName;
+  form.style.display = 'none';
+  [['authenticity_token', form_cfg.token], ['form_submission[name]', name], ['form_submission[email]', email]]
+    .forEach(([n, v]) => { const i = document.createElement('input'); i.type = 'hidden'; i.name = n; i.value = v; form.appendChild(i); });
+  document.body.appendChild(iframe);
+  document.body.appendChild(form);
+  form.submit();
+  setTimeout(() => { iframe.remove(); form.remove(); }, 8000);
+}
+
+function submitOptIn(e) {
+  e.preventDefault();
+  const name  = document.getElementById('p3-name').value.trim();
+  const email = document.getElementById('p3-email').value.trim();
+  if (!name || !email) return;
+  setLS('ssq_name',  name);
+  setLS('ssq_email', email);
+  submitToKajabi(name, email);
+  renderPage4();
+  showPage(4);
+}
+
+/* ================================================================
+   PAGE 4 COUNTDOWN
+   ================================================================ */
+let p4Interval = null;
+const P4_DURATION_MS = 20 * 60 * 1000;
+
+function initCountdown(archetypeName) {
+  const key = 'ssq_countdown_end';
+  let endTime = getLS(key) ? parseInt(getLS(key)) : null;
+  if (!endTime || endTime < Date.now()) {
+    endTime = Date.now() + P4_DURATION_MS;
+    setLS(key, String(endTime));
+  }
+  if (p4Interval) clearInterval(p4Interval);
+  const tick = () => {
+    const rem = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
+    const el  = document.getElementById('countdown-display');
+    if (!el) { clearInterval(p4Interval); return; }
+    if (rem <= 0) {
+      clearInterval(p4Interval);
+      el.innerHTML = '<span class="countdown-expired">Standard pricing now applies.</span>';
+      const pn = document.getElementById('upsell-price-new');
+      const ps = document.getElementById('upsell-price-sub');
+      if (pn) pn.textContent = '$450';
+      if (ps) ps.textContent = 'Standard monthly rate. 6-month minimum.';
+    } else {
+      const m = String(Math.floor(rem/60)).padStart(2,'0');
+      const s = String(rem%60).padStart(2,'0');
+      el.innerHTML = '<span class="countdown-time">' + m + ' : ' + s + '</span><span class="countdown-sublabel">Min · Sec</span>';
+    }
+  };
+  tick();
+  p4Interval = setInterval(tick, 1000);
+}
+
+/* ================================================================
+   PAGE 5 COUNTDOWN (5 min, key: seasonsExpiry)
+   ================================================================ */
+let seasonsInterval = null;
+const SEASONS_DURATION_MS = 5 * 60 * 1000;
+
+function initSeasonsTimer() {
+  const key = 'seasonsExpiry';
+  let endTime = getLS(key) ? parseInt(getLS(key)) : null;
+  if (!endTime || endTime < Date.now()) {
+    endTime = Date.now() + SEASONS_DURATION_MS;
+    setLS(key, String(endTime));
+  }
+  if (seasonsInterval) clearInterval(seasonsInterval);
+  const tick = () => {
+    const rem = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
+    const el  = document.getElementById('seasons-timer-display');
+    if (!el) { clearInterval(seasonsInterval); return; }
+    if (rem <= 0) {
+      clearInterval(seasonsInterval);
+      el.innerHTML = '<span style="font-family:var(--font-body);font-style:italic;font-size:13px;color:var(--burgundy);">Offer expired.</span>';
+      const pNew = document.getElementById('seasons-price-new');
+      const pOld = document.getElementById('seasons-price-old');
+      const save = document.getElementById('seasons-save');
+      const cta  = document.getElementById('seasons-cta');
+      if (pNew) pNew.textContent = '$47';
+      if (pOld) pOld.style.display = 'none';
+      if (save) save.style.display = 'none';
+      if (cta)  cta.textContent = 'Yes, give me Seen In Seasons for $47 →';
+    } else {
+      const m = String(Math.floor(rem/60)).padStart(2,'0');
+      const s = String(rem%60).padStart(2,'0');
+      el.innerHTML = '<span class="timer-time">' + m + ' : ' + s + '</span><span class="timer-sub">Min · Sec</span>';
+    }
+  };
+  tick();
+  seasonsInterval = setInterval(tick, 1000);
+}
+
+/* ================================================================
+   ROUTING
+   ================================================================ */
+function goToDownsell(e) {
+  if (e) e.preventDefault();
+  setLS('ssq_p5_allowed', '1');
+  showPage(5);
+}
+
+function goToRoom(e) {
+  if (e) e.preventDefault();
+  setLS('ssq_p6_allowed', '1');
+  showPage(6);
+}
+
+function trackExit(type) {
+  setLS('funnelExit', type);
+}
+
+/* ================================================================
+   ARCHETYPE DOODLES (Page 4 hero)
+   ================================================================ */
+function getDoodles(key) {
+  const map = {
+    refiner: `
+      <svg class="doodle" style="top:16px;left:16px;width:46px;height:46px;" viewBox="0 0 50 50" fill="none" stroke="#54110f" stroke-width="1.5" stroke-linecap="round">
+        <path d="M25 5 L27 21 L43 25 L27 29 L25 45 L23 29 L7 25 L23 21 Z"/>
+      </svg>
+      <svg class="doodle" style="bottom:16px;right:16px;width:52px;height:44px;" viewBox="0 0 58 48" fill="none" stroke="#54110f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 8 Q6 4 10 4 L28 4 L28 44 Q18 40 6 44 Z"/>
+        <path d="M28 4 L46 4 Q50 4 50 8 L50 44 Q38 40 28 44 Z"/>
+        <line x1="28" y1="4" x2="28" y2="44"/>
+        <line x1="12" y1="14" x2="24" y2="14" opacity="0.5"/><line x1="12" y1="20" x2="24" y2="20" opacity="0.5"/>
+        <line x1="32" y1="14" x2="44" y2="14" opacity="0.5"/><line x1="32" y1="20" x2="44" y2="20" opacity="0.5"/>
+      </svg>`,
+    spiker: `
+      <svg class="doodle" style="top:16px;left:16px;width:44px;height:50px;" viewBox="0 0 48 56" fill="none" stroke="#54110f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 8 L44 8 L24 32 Z"/>
+        <line x1="24" y1="32" x2="24" y2="50"/><line x1="12" y1="50" x2="36" y2="50"/>
+        <circle cx="37" cy="13" r="4"/><line x1="35" y1="11" x2="41" y2="7"/>
+      </svg>
+      <svg class="doodle" style="bottom:16px;right:16px;width:50px;height:50px;" viewBox="0 0 54 54" fill="none" stroke="#54110f" stroke-width="1.5" stroke-linecap="round">
+        <path d="M40 8 L41.5 16 L49.5 18 L41.5 20 L40 28 L38.5 20 L30.5 18 L38.5 16 Z"/>
+        <path d="M16 28 L17 33 L22 35 L17 37 L16 42 L15 37 L10 35 L15 33 Z"/>
+      </svg>`,
+    studier: `
+      <svg class="doodle" style="top:16px;right:16px;width:54px;height:30px;" viewBox="0 0 60 34" fill="none" stroke="#54110f" stroke-width="1.5" stroke-linecap="round">
+        <path d="M4 17 Q30 4 56 17"/>
+        <circle cx="8" cy="15" r="3"/><circle cx="17" cy="10" r="3"/><circle cx="26" cy="7" r="3"/>
+        <circle cx="35" cy="7" r="3"/><circle cx="44" cy="10" r="3"/><circle cx="53" cy="15" r="3"/>
+      </svg>
+      <svg class="doodle" style="bottom:16px;left:16px;width:50px;height:42px;" viewBox="0 0 56 46" fill="none" stroke="#54110f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="4" y="4" width="48" height="38" rx="3"/>
+        <line x1="28" y1="4" x2="28" y2="42"/>
+        <line x1="10" y1="14" x2="24" y2="14" opacity="0.6"/><line x1="10" y1="20" x2="24" y2="20" opacity="0.6"/>
+        <line x1="32" y1="14" x2="46" y2="14" opacity="0.6"/><line x1="32" y1="20" x2="46" y2="20" opacity="0.6"/>
+      </svg>`,
+    overworker: `
+      <svg class="doodle" style="top:16px;left:16px;width:52px;height:40px;" viewBox="0 0 58 44" fill="none" stroke="#54110f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="6" width="52" height="34" rx="3"/>
+        <path d="M3 6 L29 26 L55 6"/>
+        <path d="M3 40 L21 22"/><path d="M55 40 L37 22"/>
+      </svg>
+      <svg class="doodle" style="bottom:16px;right:16px;width:46px;height:50px;" viewBox="0 0 50 58" fill="none" stroke="#54110f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="17" cy="18" r="13"/><circle cx="17" cy="18" r="6"/>
+        <line x1="27" y1="27" x2="46" y2="48"/>
+        <line x1="39" y1="40" x2="43" y2="44"/><line x1="35" y1="44" x2="31" y2="48"/>
+      </svg>`
+  };
+  return map[key] || map.refiner;
+}
+
+/* ================================================================
+   PAGE 4 RENDER
+   ================================================================ */
+function renderPage4() {
+  const result = getLS('ssq_result') || 'refiner';
+  const a = archetypes[result];
+  const container = document.getElementById('p4-content');
+
+  container.innerHTML =
+
+  /* 1. RESULT HERO */
+  '<div class="p4-hero">' +
+    '<div class="card-hero-inner" style="border-color:rgba(84,17,15,0.35);"></div>' +
+    getDoodles(result) +
+    '<div style="position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;">' +
+      '<span class="p4-archetype-label">Your Success Setpoint Archetype</span>' +
+      '<h2 class="p4-hero-headline"><span>The</span><span class="archetype-name">' + a.name + '</span></h2>' +
+      '<p class="p4-intro">' + a.intro + '</p>' +
+      '<div class="p4-energy-pill anim-shake">' + a.energy + '</div>' +
+    '</div>' +
+  '</div>' +
+
+  /* 2. GAP CARD */
+  '<div class="p4-gap-card">' +
+    '<div class="p4-gap-heading-area">' +
+      '<span class="p4-gap-ornament">⊙ ⊙ ⊙</span>' +
+      '<h3 class="p4-gap-title">Your Gap Is</h3>' +
+      '<hr class="p4-gap-divider">' +
+      '<span class="p4-gap-ornament">⊙ ⊙ ⊙</span>' +
+    '</div>' +
+    '<div class="p4-gap-body-row">' +
+      '<div class="p4-gap-left">' +
+        '<div class="p4-gap-word">' + a.gapWord + '</div>' +
+        '<p class="p4-gap-subline">' + a.gapSubline + '</p>' +
+      '</div>' +
+      '<div class="p4-gap-stat">' +
+        '<div class="p4-gap-pct">' + a.gapPercent + '%</div>' +
+        '<div class="p4-gap-pct-label">gap score</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="p4-gap-bar-wrap">' +
+      '<div class="p4-gap-bar-track">' +
+        '<div class="p4-gap-bar-fill-burg" style="width:' + a.gapPercent + '%"></div>' +
+        '<div class="p4-gap-bar-fill-pink" style="width:' + a.gapOtherPercent + '%"></div>' +
+      '</div>' +
+      '<div class="p4-gap-bar-labels">' +
+        '<span class="p4-gap-bar-label">' + a.gapWord + ' gap — ' + a.gapPercent + '%</span>' +
+        '<span class="p4-gap-bar-label">Other — ' + a.gapOtherPercent + '%</span>' +
+      '</div>' +
+    '</div>' +
+  '</div>' +
+
+  /* 3a. ACCORDION: LIE */
+  '<div class="accordion-card"><details>' +
+    '<summary>' +
+      '<div class="accordion-num">01</div>' +
+      '<div class="accordion-summary-text">' +
+        '<span class="accordion-label-tag">The Lie You Tell Yourself</span>' +
+        '<span class="accordion-title">The belief keeping the gap open</span>' +
+      '</div>' +
+      '<svg class="accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
+    '</summary>' +
+    '<div class="accordion-body">' +
+      '<p class="accordion-lie-quote">' + a.lie + '</p>' +
+      '<p class="accordion-body-text">' + a.lieBody + '</p>' +
+    '</div>' +
+  '</details></div>' +
+
+  /* 3b. ACCORDION: PATTERN */
+  '<div class="accordion-card"><details>' +
+    '<summary>' +
+      '<div class="accordion-num">02</div>' +
+      '<div class="accordion-summary-text">' +
+        '<span class="accordion-label-tag">The Pattern Underneath</span>' +
+        '<span class="accordion-title">What\'s really driving it</span>' +
+      '</div>' +
+      '<svg class="accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
+    '</summary>' +
+    '<div class="accordion-body">' +
+      '<p class="accordion-stake">' + a.pattern + '</p>' +
+      '<p class="accordion-body-text">' + a.patternBody + '</p>' +
+    '</div>' +
+  '</details></div>' +
+
+  /* 3c. ACCORDION: MOVE (open by default) */
+  '<div class="accordion-card"><details open>' +
+    '<summary>' +
+      '<div class="accordion-num">03</div>' +
+      '<div class="accordion-summary-text">' +
+        '<span class="accordion-label-tag">The Move This Week</span>' +
+        '<span class="accordion-title">What to do right now</span>' +
+      '</div>' +
+      '<svg class="accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
+    '</summary>' +
+    '<div class="accordion-body">' +
+      '<p class="accordion-move-directive">' + a.move + '</p>' +
+      '<div class="move-actions">' +
+        a.moveActions.map(function(ac) {
+          return '<div class="move-action">' +
+            '<span class="move-action-star">✶</span>' +
+            '<div><div class="move-action-title">' + ac.title + '</div>' +
+            '<div class="move-action-body">' + ac.body + '</div></div>' +
+          '</div>';
+        }).join('') +
+      '</div>' +
+    '</div>' +
+  '</details></div>' +
+
+  /* 4. TAB SECTION */
+  '<div class="p4-tab-card">' +
+    '<div class="p4-tab-inner"></div>' +
+    '<div style="position:relative;">' +
+      '<div class="p4-tab-label">⊙ Read This Before You Close The Tab ⊙</div>' +
+      '<p class="p4-tab-intro-line">Here is the part most quizzes leave out.</p>' +
+      '<p class="p4-tab-body">' + a.tabBody1 + '</p>' +
+      '<p class="p4-tab-body">' + a.tabBody2 + '</p>' +
+      '<div class="p4-cost-box">' +
+        '<span class="p4-cost-label">⊙ The Real Cost ⊙</span>' +
+        '<p class="p4-cost-body">' + a.cost + '</p>' +
+      '</div>' +
+      '<p class="p4-tab-close">' + a.tabClose + '</p>' +
+    '</div>' +
+  '</div>' +
+
+  /* 5. UPSELL */
+  '<div class="p4-upsell">' +
+    '<div class="p4-upsell-inner"></div>' +
+    '<div class="upsell-content">' +
+      '<div class="countdown-pill">' +
+        '<span class="countdown-label" id="countdown-label">⊙ ' + a.name.toUpperCase() + '-ONLY OFFER EXPIRES IN ⊙</span>' +
+        '<div id="countdown-display"><span class="countdown-time">20 : 00</span><span class="countdown-sublabel">Min · Sec</span></div>' +
+      '</div>' +
+      '<span class="upsell-inv-label">Your Invitation To</span>' +
+      '<div class="upsell-title-1">Woman Mastery HQ</div>' +
+      '<span class="upsell-title-2">Membership</span>' +
+      '<div class="upsell-commit-row">' +
+        '<span class="upsell-commit-old">6-Month Minimum Commitment</span>' +
+        '<span class="upsell-commit-new">3-Month Minimum Commitment</span>' +
+        '<span class="upsell-commit-sub">6 months is the standard commitment. 3 months is not offered to the public. This is your only opportunity to enter at this length.</span>' +
+      '</div>' +
+      '<details class="included-details" open>' +
+        '<summary class="included-summary"><span>What\'s Included</span>' +
+          '<svg class="included-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
+        '</summary>' +
+        '<div class="included-body">' +
+          '<span class="included-bold">Full WMHQ Membership access. Strategy and subconscious, integrated.</span>' +
+          '<div class="included-item"><span class="included-star">✶</span><span>4x monthly group calls</span></div>' +
+          '<div class="included-item"><span class="included-star">✶</span><span>WMHQ Vault and Personal Portal with trainings, dashboards and resources</span></div>' +
+          '<div class="included-item"><span class="included-star">✶</span><span>Weekly personalised mentorship and advisory</span></div>' +
+          '<div class="included-item"><span class="included-star">✶</span><span>Bi-annual VIP 4-hour workshop</span></div>' +
+          '<div class="included-item"><span class="included-star">✶</span><span>WMHQ Community access</span></div>' +
+          '<a href="https://www.womanmasteryhq.com" target="_blank" class="included-link">Click here to read the full breakdown ↗</a>' +
+          '<hr class="included-divider">' +
+          '<span class="included-bonus-label">Plus Your ' + a.name + ' Bonuses</span>' +
+          '<div class="included-bonus-item"><span class="bonus-tag">Bonus</span><span>45-min 1:1 onboarding call with Jess</span></div>' +
+          '<div class="included-bonus-item"><span class="bonus-tag">Bonus</span><span>Seen In Seasons Workshop ($47 value)</span></div>' +
+          '<div class="included-bonus-item"><span class="bonus-tag">$100 Off</span><span>Your first month</span></div>' +
+          '<div class="included-bonus-item"><span class="bonus-tag">3 Months</span><span>6 months is the standard commitment. 3 months is not publicly offered and is only available through this invitation.</span></div>' +
+        '</div>' +
+      '</details>' +
+      '<div class="upsell-pricing">' +
+        '<span class="upsell-pricing-label">First Month</span>' +
+        '<span class="upsell-price-old">$450</span>' +
+        '<span class="upsell-price-new" id="upsell-price-new">$350</span>' +
+        '<span class="upsell-price-sub" id="upsell-price-sub">Then $450/month. 3-month minimum.</span>' +
+      '</div>' +
+      /* CTA — replace href with Kajabi checkout URL */
+      '<a href="https://www.jessicapinili.com/offers/umFVV6T9?coupon_code=WMHQQUIZ100" target="_blank" rel="noopener noreferrer" onclick="trackExit(\'wmhq\')" class="pill pill-cream anim-cta-jiggle" ' +
+        'style="width:100%;max-width:380px;padding:18px 32px;font-size:16px;display:flex;justify-content:center;margin:0 auto;">' +
+        'Claim my spot in WMHQ →' +
+      '</a>' +
+      '<p class="upsell-footer">Not Offered Publicly · ' + a.name + '-Exclusive Pricing</p>' +
+      /* "No" option — TODO: Replace this with final URL to next page */
+      '<div style="text-align:center;">' +
+        '<a href="#" class="no-thanks-card" onclick="goToDownsell(event)">No, I don\'t want to change</a>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+
+  initCountdown(a.name);
+}
+
+/* ================================================================
+   INIT
+   ================================================================ */
+(function init() {
+  loadState();
+  const result = getLS('ssq_result');
+  const page   = getLS('ssq_page');
+
+  if (result) {
+    renderPage4();
+    if (page === '6' && getLS('ssq_p6_allowed')) showPage(6);
+    else if (page === '5' && getLS('ssq_p5_allowed')) showPage(5);
+    else showPage(4);
+  } else if (page === '3') {
+    showPage(3);
+  } else if (answers.length > 0) {
+    showPage(2);
+    renderQuestion();
+  } else {
+    showPage(1);
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Result — Spiker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600;1,700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f2f2f2; --burgundy: #54110f; --deep-burg: #30160f;
+  --pink: #f39fa9; --cream: #f4e8d8; --white: #ffffff; --body: #1a1a1a;
+  --shadow-hero: 12px 12px 0 var(--deep-burg);
+  --shadow-card: 6px 6px 0 var(--deep-burg);
+  --shadow-sm: 4px 4px 0 var(--deep-burg);
+  --shadow-pink: 5px 5px 0 var(--pink);
+  --radius-hero: 20px; --radius-card: 16px; --radius-sm: 12px; --radius-pill: 999px;
+  --font-head: 'Helvetica Now', Helvetica, 'Arial Black', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); font-family: var(--font-body); color: var(--body); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 24px 16px 80px; -webkit-font-smoothing: antialiased; }
+.doodle { position: absolute; opacity: 0.55; pointer-events: none; z-index: 1; }
+.card-hero-inner { border-radius: 14px; border: 1px solid rgba(243,159,169,0.45); position: absolute; inset: 10px; pointer-events: none; z-index: 2; }
+.pill { display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-pill); padding: 14px 32px; font-family: var(--font-body); font-weight: 600; font-size: 15px; cursor: pointer; border: none; text-decoration: none; }
+.pill-cream { background: var(--cream); color: var(--burgundy); box-shadow: var(--shadow-sm); border: 1px solid var(--burgundy); }
+.pill-burgundy { background: var(--burgundy); color: var(--cream); box-shadow: 4px 4px 0 var(--deep-burg); border: 1px solid var(--deep-burg); }
+.pill-pink-label { background: var(--pink); color: var(--burgundy); font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 7px 18px; border-radius: var(--radius-pill); display: inline-block; }
+
+/* Wrap */
+.p4-wrap { width: 100%; max-width: 580px; display: flex; flex-direction: column; gap: 20px; }
+
+/* Hero */
+.p4-hero { background: var(--pink); padding: 52px 28px 44px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 18px; position: relative; border-radius: var(--radius-hero); box-shadow: var(--shadow-hero); overflow: hidden; }
+.p4-hero .card-hero-inner { border-color: rgba(84,17,15,0.35); }
+.p4-archetype-label { color: var(--burgundy); font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; position: relative; z-index: 3; }
+.p4-hero-headline { font-family: var(--font-head); font-weight: 900; font-size: clamp(46px,12vw,62px); line-height: 1.05; color: var(--burgundy); position: relative; z-index: 3; }
+.archetype-name { font-family: var(--font-body); font-style: italic; font-weight: 700; display: block; }
+.p4-intro { font-size: 15px; line-height: 1.6; color: var(--burgundy); opacity: 0.9; max-width: 420px; position: relative; z-index: 3; }
+.p4-energy-pill { background: var(--burgundy); color: var(--cream); border-radius: var(--radius-pill); padding: 12px 24px; font-family: var(--font-body); font-style: italic; font-size: 14px; line-height: 1.4; text-align: center; display: inline-block; max-width: 380px; border: 1px solid var(--deep-burg); position: relative; z-index: 3; }
+
+/* Gap card */
+.p4-gap-card { background: var(--white); border: 1px solid var(--burgundy); border-radius: var(--radius-card); box-shadow: var(--shadow-card); padding: 32px 24px 28px; }
+.p4-gap-heading-area { text-align: center; margin-bottom: 24px; }
+.p4-gap-ornament { color: var(--pink); font-size: 14px; letter-spacing: 0.3em; display: block; margin-bottom: 4px; }
+.p4-gap-title { font-family: var(--font-serif); font-size: 28px; color: var(--body); margin: 4px 0; }
+.p4-gap-divider { border: none; border-top: 1.5px dashed var(--pink); margin: 10px auto; width: 60%; }
+.p4-gap-body-row { display: flex; gap: 16px; align-items: flex-start; }
+.p4-gap-left { flex: 1; }
+.p4-gap-word { font-family: var(--font-serif); font-size: clamp(32px,8vw,46px); color: var(--burgundy); line-height: 1; margin-bottom: 8px; }
+.p4-gap-subline { font-size: 13px; line-height: 1.5; color: var(--body); opacity: 0.75; }
+.p4-gap-stat { background: var(--burgundy); color: var(--cream); border-radius: var(--radius-sm); padding: 16px 20px; text-align: center; min-width: 100px; }
+.p4-gap-pct { font-family: var(--font-serif); font-size: 36px; line-height: 1; color: var(--cream); }
+.p4-gap-pct-label { font-size: 11px; opacity: 0.7; margin-top: 4px; }
+.p4-gap-bar-wrap { margin-top: 20px; }
+.p4-gap-bar-track { display: flex; height: 10px; border-radius: 999px; overflow: hidden; border: 1px solid var(--burgundy); }
+.p4-gap-bar-fill-burg { background: var(--burgundy); }
+.p4-gap-bar-fill-pink { background: var(--pink); }
+.p4-gap-bar-labels { display: flex; justify-content: space-between; margin-top: 6px; }
+.p4-gap-bar-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; color: var(--body); opacity: 0.65; text-transform: uppercase; }
+
+/* Accordions */
+.accordion-card { background: var(--white); border: 1px solid var(--burgundy); border-radius: var(--radius-card); box-shadow: var(--shadow-card); overflow: hidden; }
+.accordion-card summary { display: flex; align-items: center; gap: 14px; padding: 20px 22px; cursor: pointer; list-style: none; -webkit-user-select: none; user-select: none; }
+.accordion-card summary::-webkit-details-marker { display: none; }
+.accordion-num { width: 34px; height: 34px; min-width: 34px; border-radius: 50%; background: var(--burgundy); color: var(--cream); font-size: 10px; font-weight: 700; letter-spacing: 0.05em; display: flex; align-items: center; justify-content: center; }
+.accordion-summary-text { flex: 1; }
+.accordion-label-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--burgundy); display: block; margin-bottom: 2px; }
+.accordion-title { font-size: 15px; font-weight: 600; color: var(--body); }
+.accordion-chevron { width: 20px; height: 20px; color: var(--burgundy); transition: transform 250ms ease; flex-shrink: 0; }
+details[open] .accordion-chevron { transform: rotate(180deg); }
+.accordion-body { padding: 20px 22px 24px; border-top: 1px solid rgba(84,17,15,0.12); }
+.accordion-lie-quote { font-family: var(--font-body); font-style: italic; font-size: 18px; color: var(--burgundy); line-height: 1.5; margin-bottom: 12px; }
+.accordion-stake { font-family: var(--font-serif); font-size: 20px; color: var(--burgundy); line-height: 1.4; margin-bottom: 12px; }
+.accordion-move-directive { font-family: var(--font-serif); font-size: 20px; color: var(--burgundy); line-height: 1.4; margin-bottom: 16px; }
+.accordion-body-text { font-size: 14px; line-height: 1.65; color: var(--body); opacity: 0.85; }
+.move-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+.move-action { background: var(--cream); border: 1px solid var(--pink); border-radius: 12px; padding: 14px 16px; display: flex; gap: 10px; align-items: flex-start; }
+.move-action-star { color: var(--burgundy); font-size: 14px; margin-top: 2px; min-width: 14px; }
+.move-action-title { font-weight: 600; font-size: 14px; color: var(--burgundy); margin-bottom: 4px; }
+.move-action-body { font-size: 13px; line-height: 1.5; color: var(--body); opacity: 0.8; }
+
+/* Tab card */
+.p4-tab-card { background: var(--deep-burg); border-radius: var(--radius-card); box-shadow: var(--shadow-card); padding: 36px 28px 32px; position: relative; overflow: hidden; }
+.p4-tab-inner { border: 1px solid rgba(243,159,169,0.35); border-radius: 12px; position: absolute; inset: 8px; pointer-events: none; }
+.p4-tab-label { color: var(--pink); font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 12px; position: relative; }
+.p4-tab-intro-line { font-family: var(--font-serif); font-size: 18px; color: var(--cream); margin-bottom: 16px; position: relative; }
+.p4-tab-body { font-size: 15px; line-height: 1.65; color: var(--cream); opacity: 0.85; margin-bottom: 12px; position: relative; }
+.p4-cost-box { background: var(--burgundy); border: 1.5px solid var(--pink); border-radius: 12px; box-shadow: var(--shadow-pink); padding: 20px 18px; margin: 20px 0; position: relative; }
+.p4-cost-label { color: var(--pink); font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 10px; display: block; }
+.p4-cost-body { font-size: 14px; line-height: 1.65; color: var(--cream); }
+.cost-hl { background: var(--pink); color: var(--burgundy); font-weight: 700; padding: 1px 5px; border-radius: 4px; }
+.p4-tab-close { font-family: var(--font-body); font-style: italic; font-size: 16px; color: var(--cream); opacity: 0.9; line-height: 1.6; position: relative; }
+
+/* Upsell */
+.p4-upsell { background: var(--burgundy); border-radius: var(--radius-hero); box-shadow: var(--shadow-hero); padding: 40px 28px 36px; position: relative; overflow: hidden; }
+.p4-upsell-inner { border: 1px solid rgba(243,159,169,0.45); border-radius: 14px; position: absolute; inset: 10px; pointer-events: none; }
+.upsell-content { position: relative; text-align: center; }
+.countdown-pill { background: var(--cream); border: 1px solid var(--burgundy); border-radius: var(--radius-pill); padding: 16px 28px; box-shadow: var(--shadow-sm); text-align: center; margin: 0 auto 4px; display: block; width: 100%; max-width: 360px; }
+.countdown-label { color: var(--burgundy); font-size: 9px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 6px; display: block; }
+.countdown-time { font-family: var(--font-serif); font-size: 36px; color: var(--burgundy); line-height: 1; letter-spacing: 0.05em; display: block; }
+.countdown-sublabel { color: var(--burgundy); font-size: 9px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 4px; opacity: 0.6; display: block; }
+.upsell-inv-label { color: var(--pink); font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; display: block; margin: 20px 0 8px; }
+.upsell-title-1 { font-family: var(--font-serif); font-size: 28px; color: var(--cream); line-height: 1.2; }
+.upsell-title-2 { font-family: var(--font-body); font-style: italic; font-weight: 600; font-size: 22px; color: var(--pink); display: block; margin-top: 2px; }
+.upsell-commit-row { margin: 16px 0 8px; }
+.upsell-commit-old { color: var(--cream); opacity: 0.5; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: line-through; display: block; }
+.upsell-commit-new { color: var(--pink); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; display: block; margin-top: 4px; }
+.upsell-commit-sub { font-family: var(--font-body); font-style: italic; font-size: 13px; color: var(--cream); opacity: 0.8; line-height: 1.5; margin: 8px auto 0; display: block; max-width: 320px; }
+.included-details { background: rgba(255,255,255,0.06); border: 1px solid rgba(243,159,169,0.3); border-radius: 12px; margin: 16px 0; overflow: hidden; }
+.included-summary { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; cursor: pointer; list-style: none; color: var(--cream); font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; -webkit-user-select: none; user-select: none; }
+.included-summary::-webkit-details-marker { display: none; }
+.included-chevron { transition: transform 250ms ease; color: var(--pink); flex-shrink: 0; }
+.included-details[open] .included-chevron { transform: rotate(180deg); }
+.included-body { padding: 0 18px 18px; text-align: left; }
+.included-bold { color: var(--cream); font-weight: 600; font-size: 14px; line-height: 1.5; margin-bottom: 12px; display: block; }
+.included-item { color: var(--cream); opacity: 0.85; font-size: 13px; line-height: 1.6; padding: 3px 0; display: flex; gap: 8px; }
+.included-star { color: var(--pink); min-width: 12px; }
+.included-link { color: var(--pink); font-size: 12px; text-decoration: underline; display: inline-block; margin: 12px 0; }
+.included-divider { border: none; border-top: 1px solid rgba(243,159,169,0.25); margin: 14px 0; }
+.included-bonus-label { color: var(--pink); font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; display: block; margin-bottom: 10px; }
+.included-bonus-item { color: var(--cream); font-size: 13px; line-height: 1.6; display: flex; gap: 8px; align-items: flex-start; padding: 3px 0; }
+.bonus-tag { background: var(--pink); color: var(--burgundy); font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 999px; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; margin-top: 2px; }
+.upsell-pricing { margin: 20px 0; }
+.upsell-pricing-label { color: var(--pink); font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; display: block; margin-bottom: 6px; }
+.upsell-price-old { color: var(--cream); opacity: 0.5; font-family: var(--font-serif); font-size: 22px; text-decoration: line-through; display: block; }
+.upsell-price-new { font-family: var(--font-serif); font-size: 48px; color: var(--cream); line-height: 1; display: block; margin: 4px 0; }
+.upsell-price-sub { color: var(--cream); opacity: 0.65; font-size: 13px; display: block; }
+.upsell-footer { color: var(--pink); font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 16px; opacity: 0.8; }
+.no-thanks-card { display: inline-block; border: 1px solid rgba(243,159,169,0.3); border-radius: 8px; padding: 10px 24px; color: var(--cream); opacity: 0.5; font-size: 13px; text-decoration: underline; text-decoration-color: rgba(243,159,169,0.4); text-underline-offset: 3px; cursor: pointer; font-family: var(--font-body); transition: opacity 0.2s ease; margin-top: 14px; }
+@keyframes cta-jiggle { 0%,78%,100% { transform: translateX(0) rotate(0deg); } 80% { transform: translateX(-3px) rotate(-0.6deg); } 83% { transform: translateX(3px) rotate(0.6deg); } 86% { transform: translateX(-2px) rotate(-0.4deg); } 89% { transform: translateX(1px) rotate(0.2deg); } 92% { transform: translateX(0) rotate(0deg); } }
+.anim-cta-jiggle { animation: cta-jiggle 5s ease-in-out infinite; }
+@media (max-width: 400px) { .p4-gap-body-row { flex-direction: column; } .p4-gap-stat { align-self: flex-start; min-width: unset; } }
+@media (min-width: 640px) { .p4-wrap { max-width: 640px; } .p4-hero { padding: 68px 40px 56px; } .p4-upsell { padding: 52px 40px 44px; } }
+</style>
+</head>
+<body>
+<div class="p4-wrap">
+
+  <!-- 1. HERO -->
+  <div class="p4-hero">
+    <div class="card-hero-inner"></div>
+    <div style="position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center;width:100%;">
+      <span class="p4-archetype-label">✦ Your Setpoint ✦</span>
+      <div class="p4-hero-headline">You're The<span class="archetype-name">Spiker</span></div>
+      <p class="p4-intro">You know how to create momentum. You've had the big months. You know what it feels like when the machine works. The problem is that you've been chasing that feeling rather than building the infrastructure that makes it a baseline, not a highlight.</p>
+      <span class="p4-energy-pill">Energy: Kylie Jenner's lip kit launch energy. Cannot do a Tuesday.</span>
+    </div>
+  </div>
+
+  <!-- 2. GAP CARD -->
+  <div class="p4-gap-card">
+    <div class="p4-gap-heading-area">
+      <span class="p4-gap-ornament">· · ·</span>
+      <div class="p4-gap-title">The Gap</div>
+      <hr class="p4-gap-divider">
+    </div>
+    <div class="p4-gap-body-row">
+      <div class="p4-gap-left">
+        <div class="p4-gap-word">Subconscious</div>
+        <p class="p4-gap-subline">The strategy is there. Your nervous system needs a different story.</p>
+      </div>
+      <div class="p4-gap-stat">
+        <div class="p4-gap-pct">78%</div>
+        <div class="p4-gap-pct-label">of your gap</div>
+      </div>
+    </div>
+    <div class="p4-gap-bar-wrap">
+      <div class="p4-gap-bar-track">
+        <div class="p4-gap-bar-fill-burg" style="width:78%"></div>
+        <div class="p4-gap-bar-fill-pink" style="width:22%"></div>
+      </div>
+      <div class="p4-gap-bar-labels">
+        <span class="p4-gap-bar-label">Subconscious</span>
+        <span class="p4-gap-bar-label">Other</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. ACCORDION: The Lie -->
+  <details class="accordion-card" open>
+    <summary>
+      <div class="accordion-num">01</div>
+      <div class="accordion-summary-text">
+        <span class="accordion-label-tag">The Lie You're Believing</span>
+        <span class="accordion-title">The belief keeping the gap open</span>
+      </div>
+      <svg class="accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </summary>
+    <div class="accordion-body">
+      <p class="accordion-lie-quote">&ldquo;I just need one more good launch to get back on track.&rdquo;</p>
+      <p class="accordion-body-text">The belief that the next spike will solve the infrastructure problem is the trap. It won't. A great launch month is not a business model. It gives you breathing room and dopamine, then the quiet comes back harder because now you've proven you can do it, and the baseline still doesn't reflect that.</p>
+    </div>
+  </details>
+
+  <!-- 4. ACCORDION: The Pattern -->
+  <details class="accordion-card" open>
+    <summary>
+      <div class="accordion-num">02</div>
+      <div class="accordion-summary-text">
+        <span class="accordion-label-tag">The Pattern Underneath</span>
+        <span class="accordion-title">What's really driving it</span>
+      </div>
+      <svg class="accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </summary>
+    <div class="accordion-body">
+      <div class="accordion-stake">Your income pattern is a symptom of a self-worth pattern.</div>
+      <p class="accordion-body-text">The feast and famine cycle isn't a marketing problem. It's a story your nervous system is running. The belief that visibility has to be earned in concentrated bursts, that you can't just 'be available' in the market without a big moment to justify it. Daily selling feels exposing. Launches feel safer because there's an event to hide behind.</p>
+    </div>
+  </details>
+
+  <!-- 5. ACCORDION: Your Move -->
+  <details class="accordion-card" open>
+    <summary>
+      <div class="accordion-num">03</div>
+      <div class="accordion-summary-text">
+        <span class="accordion-label-tag">Your Next Move</span>
+        <span class="accordion-title">The specific action to take this week</span>
+      </div>
+      <svg class="accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </summary>
+    <div class="accordion-body">
+      <div class="accordion-move-directive">Sell something small every single week for the next 8 weeks. No launch required.</div>
+      <div class="move-actions">
+        <div class="move-action">
+          <span class="move-action-star">✶</span>
+          <div>
+            <div class="move-action-title">Identify your lowest-barrier offer.</div>
+            <div class="move-action-body">What can someone buy from you without getting on a call, attending a webinar, or waiting for a launch window? That is your retention tool. Price it to be a no-brainer, and promote it weekly.</div>
+          </div>
+        </div>
+        <div class="move-action">
+          <span class="move-action-star">✶</span>
+          <div>
+            <div class="move-action-title">Create a minimum viable visibility standard.</div>
+            <div class="move-action-body">Define what consistent looks like for you, not what it looks like at launch capacity. Two emails a week. Three pieces of content. One direct outreach. Small, non-negotiable, recurring.</div>
+          </div>
+        </div>
+        <div class="move-action">
+          <span class="move-action-star">✶</span>
+          <div>
+            <div class="move-action-title">Map your last 12 months of revenue against your launch calendar.</div>
+            <div class="move-action-body">You'll see it immediately. The spikes and the silence. That visual is your business case for building a baseline. Keep it somewhere visible.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <!-- 6. TAB CARD -->
+  <div class="p4-tab-card">
+    <div class="p4-tab-inner"></div>
+    <div style="position:relative;">
+      <div class="p4-tab-label">✦ The Spiker Reality Check ✦</div>
+      <div class="p4-tab-intro-line">Here's what I need you to know about your pattern.</div>
+      <p class="p4-tab-body">You'll read this, recognise the pattern completely, and decide that the solution is to plan a better, more strategic launch next quarter. That's the Spiker's version of avoidance. It looks like ambition. The real work is in the unsexy middle: showing up in the market on a Tuesday when there's no campaign live, no deadline, no reason except that it's what consistent businesses do.</p>
+      <p class="p4-tab-body">The gap between where you are and where your revenue should be is not a launch gap. It's a baseline gap. You've built the ceiling. You haven't built the floor. And until you do, every big month is just buying you time before the next quiet one.</p>
+      <div class="p4-cost-box">
+        <span class="p4-cost-label">⊙ The Real Cost ⊙</span>
+        <p class="p4-cost-body">Each feast-and-famine cycle costs you between <span class="cost-hl">$15K and $40K</span> per year in revenue that evaporates in the quiet months, revenue that a consistent baseline would have captured. That's the difference between occasional income and a <span class="cost-hl">six-figure year</span> that actually holds.</p>
+      </div>
+      <p class="p4-tab-close">The Spiker doesn't have a strategy problem. She has a baseline problem she's learned to outsprint with launches. The next version of you doesn't need a bigger launch. She needs a floor that catches her between them.</p>
+    </div>
+  </div>
+
+  <!-- 7. UPSELL -->
+  <div class="p4-upsell">
+    <div class="p4-upsell-inner"></div>
+    <div class="upsell-content">
+      <div class="countdown-pill">
+        <span class="countdown-label">⊙ SPIKER-ONLY OFFER EXPIRES IN ⊙</span>
+        <div><span class="countdown-time">20 : 00</span><span class="countdown-sublabel">Min · Sec</span></div>
+      </div>
+      <span class="upsell-inv-label">Your Invitation To</span>
+      <div class="upsell-title-1">Woman Mastery HQ</div>
+      <span class="upsell-title-2">Membership</span>
+      <div class="upsell-commit-row">
+        <span class="upsell-commit-old">6-Month Minimum Commitment</span>
+        <span class="upsell-commit-new">3-Month Minimum Commitment</span>
+        <span class="upsell-commit-sub">6 months is the standard commitment. 3 months is not offered to the public. This is your only opportunity to enter at this length.</span>
+      </div>
+      <details class="included-details" open>
+        <summary class="included-summary">
+          <span>What's Included</span>
+          <svg class="included-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="included-body">
+          <span class="included-bold">Full WMHQ Membership access. Strategy and subconscious, integrated.</span>
+          <div class="included-item"><span class="included-star">✶</span><span>4x monthly group calls</span></div>
+          <div class="included-item"><span class="included-star">✶</span><span>WMHQ Vault and Personal Portal with trainings, dashboards and resources</span></div>
+          <div class="included-item"><span class="included-star">✶</span><span>Weekly personalised mentorship and advisory</span></div>
+          <div class="included-item"><span class="included-star">✶</span><span>Bi-annual VIP 4-hour workshop</span></div>
+          <div class="included-item"><span class="included-star">✶</span><span>WMHQ Community access</span></div>
+          <a href="https://www.womanmasteryhq.com" target="_blank" class="included-link">Click here to read the full breakdown ↗</a>
+          <hr class="included-divider">
+          <span class="included-bonus-label">Plus Your Spiker Bonuses</span>
+          <div class="included-bonus-item"><span class="bonus-tag">Bonus</span><span>45-min 1:1 onboarding call with Jess</span></div>
+          <div class="included-bonus-item"><span class="bonus-tag">Bonus</span><span>Seen In Seasons Workshop ($47 value)</span></div>
+          <div class="included-bonus-item"><span class="bonus-tag">$100 Off</span><span>Your first month</span></div>
+          <div class="included-bonus-item"><span class="bonus-tag">3 Months</span><span>6 months is the standard commitment. 3 months is not publicly offered and is only available through this invitation.</span></div>
+        </div>
+      </details>
+      <div class="upsell-pricing">
+        <span class="upsell-pricing-label">First Month</span>
+        <span class="upsell-price-old">$450</span>
+        <span class="upsell-price-new">$350</span>
+        <span class="upsell-price-sub">Then $450/month. 3-month minimum.</span>
+      </div>
+      <a href="https://www.jessicapinili.com/offers/umFVV6T9?coupon_code=WMHQQUIZ100" target="_blank" rel="noopener noreferrer" class="pill pill-cream anim-cta-jiggle" style="width:100%;max-width:380px;padding:18px 32px;font-size:16px;display:flex;justify-content:center;margin:0 auto;">Claim my spot in WMHQ →</a>
+      <p class="upsell-footer">Not Offered Publicly · Spiker-Exclusive Pricing</p>
+      <div style="text-align:center;">
+        <a href="page5.html" class="no-thanks-card">No, I don't want to change</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+<style>
+.site-footer {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  padding: 9px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  background: rgba(22, 6, 3, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 200;
+  font-family: var(--font-body, 'DM Sans', sans-serif);
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  color: rgba(244,232,216,0.65);
+  flex-wrap: wrap;
+}
+.footer-links { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+.footer-links a { color: rgba(244,232,216,0.65); text-decoration: underline; text-underline-offset: 2px; white-space: nowrap; }
+.footer-links a:hover { color: rgba(244,232,216,1); }
+.footer-copy { white-space: nowrap; color: rgba(244,232,216,0.5); }
+@media (max-width: 480px) {
+  .site-footer { padding: 7px 14px; font-size: 9.5px; gap: 4px; }
+  .footer-links { gap: 10px; }
+}
+</style>
+<footer class="site-footer">
+  <div class="footer-links">
+    <a href="https://www.jessicapinili.com/jpinili-terms-conditions" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</a>
+    <a href="https://www.womanmasteryhq.com" target="_blank" rel="noopener noreferrer">Woman Mastery HQ Membership</a>
+  </div>
+  <span class="footer-copy">Jessica Pinili &copy;</span>
+</footer>
+</body>
+</html>

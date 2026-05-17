@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page 3 — Opt-in</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600;1,700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f2f2f2; --burgundy: #54110f; --deep-burg: #30160f;
+      --pink: #f39fa9; --cream: #f4e8d8; --white: #ffffff; --body: #1a1a1a;
+      --shadow-hero: 12px 12px 0 var(--deep-burg);
+      --shadow-card: 6px 6px 0 var(--deep-burg);
+      --shadow-sm: 4px 4px 0 var(--deep-burg);
+      --radius-hero: 20px; --radius-card: 16px; --radius-sm: 12px; --radius-pill: 999px;
+      --font-head: 'Helvetica Now', Helvetica, 'Arial Black', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --font-serif: 'Playfair Display', Georgia, serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      font-family: var(--font-body);
+      color: var(--body);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px 64px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .doodle { position: absolute; opacity: 0.55; pointer-events: none; z-index: 1; }
+    .card-hero-inner {
+      border-radius: 14px;
+      border: 1px solid rgba(243,159,169,0.45);
+      position: absolute;
+      inset: 10px;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-pill);
+      padding: 14px 32px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+    }
+    .pill-cream {
+      background: var(--cream);
+      color: var(--burgundy);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--burgundy);
+    }
+    .pill-burgundy {
+      background: var(--burgundy);
+      color: var(--cream);
+      box-shadow: 4px 4px 0 var(--deep-burg);
+      border: 1px solid var(--deep-burg);
+    }
+    .pill-pink-label {
+      background: var(--pink);
+      color: var(--burgundy);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 7px 18px;
+      border-radius: var(--radius-pill);
+      display: inline-block;
+    }
+    @keyframes jiggle {
+      0%,100% { transform: rotate(-1.5deg) translateY(0); }
+      25% { transform: rotate(1.5deg) translateY(-3px); }
+      50% { transform: rotate(-1deg) translateY(0); }
+      75% { transform: rotate(1deg) translateY(-2px); }
+    }
+    .anim-jiggle { animation: jiggle 2s ease-in-out infinite; }
+
+    /* Page 3 */
+    .p3-hero {
+      background: #30160f;
+      max-width: 520px;
+      width: 100%;
+      padding: 52px 32px 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      border-radius: 20px;
+      box-shadow: 12px 12px 0 #30160f;
+      overflow: hidden;
+      position: relative;
+    }
+    .p3-content {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 20px;
+    }
+    .p3-headline {
+      color: var(--cream);
+      font-family: var(--font-head);
+      font-weight: 900;
+      font-size: clamp(32px, 8vw, 48px);
+      line-height: 1.1;
+    }
+    .p3-form-card {
+      background: var(--cream);
+      border: 1px solid var(--burgundy);
+      border-radius: 16px;
+      box-shadow: 6px 6px 0 #30160f;
+      padding: 28px 24px 24px;
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      text-align: left;
+    }
+    .p3-field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .p3-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--burgundy);
+      display: block;
+    }
+    .p3-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--burgundy);
+      border-radius: 10px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      color: var(--body);
+      background: var(--white);
+      outline: none;
+    }
+    .p3-input:focus {
+      box-shadow: 3px 3px 0 var(--burgundy);
+    }
+    @media (min-width: 640px) { .p3-hero { padding: 68px 52px 60px; max-width: 600px; } }
+  </style>
+</head>
+<body>
+  <div class="p3-hero">
+    <div class="card-hero-inner" style="border-color:rgba(243,159,169,0.5);"></div>
+
+    <!-- Envelope doodle top-left -->
+    <svg class="doodle" style="top:20px;left:20px;width:54px;height:44px;" viewBox="0 0 60 48" fill="none" stroke="#f39fa9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="6" width="54" height="38" rx="4"/>
+      <path d="M3 6 L30 28 L57 6"/>
+      <path d="M3 44 L22 26"/>
+      <path d="M57 44 L38 26"/>
+    </svg>
+
+    <!-- Key doodle bottom-right -->
+    <svg class="doodle" style="bottom:20px;right:20px;width:50px;height:54px;" viewBox="0 0 54 60" fill="none" stroke="#f39fa9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="18" cy="20" r="14"/>
+      <circle cx="18" cy="20" r="6"/>
+      <line x1="29" y1="30" x2="50" y2="52"/>
+      <line x1="41" y1="43" x2="46" y2="47"/>
+      <line x1="37" y1="47" x2="33" y2="52"/>
+    </svg>
+
+    <div class="p3-content">
+      <div class="pill-pink-label anim-jiggle" style="display:inline-block;">✦ Result Ready ✦</div>
+
+      <h2 class="p3-headline">
+        Your archetype
+        <span style="color:var(--pink);font-family:var(--font-body);font-style:italic;font-weight:700;display:block;">is unlocked.</span>
+      </h2>
+
+      <p style="color:var(--cream);opacity:0.8;font-size:15px;line-height:1.55;max-width:360px;">Drop your details below and we'll reveal which Success Setpoint is keeping you stuck, plus the exact next move to break it.</p>
+
+      <div class="p3-form-card">
+        <div class="p3-field-group">
+          <label class="p3-label">First Name</label>
+          <input class="p3-input" type="text" placeholder="Your first name">
+        </div>
+        <div class="p3-field-group">
+          <label class="p3-label">Email</label>
+          <input class="p3-input" type="email" placeholder="your@email.com">
+        </div>
+        <button class="pill pill-burgundy" style="width:100%;padding:16px 24px;font-size:15px;">Reveal my archetype →</button>
+        <p style="text-align:center;font-size:10px;letter-spacing:0.1em;color:var(--burgundy);opacity:0.6;text-transform:uppercase;">No spam. Unsubscribe anytime.</p>
+      </div>
+    </div>
+  </div>
+<style>
+.site-footer {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  padding: 9px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  background: rgba(22, 6, 3, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 200;
+  font-family: var(--font-body, 'DM Sans', sans-serif);
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  color: rgba(244,232,216,0.65);
+  flex-wrap: wrap;
+}
+.footer-links { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+.footer-links a { color: rgba(244,232,216,0.65); text-decoration: underline; text-underline-offset: 2px; white-space: nowrap; }
+.footer-links a:hover { color: rgba(244,232,216,1); }
+.footer-copy { white-space: nowrap; color: rgba(244,232,216,0.5); }
+@media (max-width: 480px) {
+  .site-footer { padding: 7px 14px; font-size: 9.5px; gap: 4px; }
+  .footer-links { gap: 10px; }
+}
+</style>
+<footer class="site-footer">
+  <div class="footer-links">
+    <a href="https://www.jessicapinili.com/jpinili-terms-conditions" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</a>
+    <a href="https://www.womanmasteryhq.com" target="_blank" rel="noopener noreferrer">Woman Mastery HQ Membership</a>
+  </div>
+  <span class="footer-copy">Jessica Pinili &copy;</span>
+</footer>
+</body>
+</html>
