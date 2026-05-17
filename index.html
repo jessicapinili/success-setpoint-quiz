@@ -1347,7 +1347,8 @@ function calculateResult() {
    OPT-IN
    ================================================================ */
 function submitToKajabi(name, email) {
-  const archetype = getLS('ssq_result') || '';
+  const raw = getLS('ssq_result') || '';
+  const archetype = raw.charAt(0).toUpperCase() + raw.slice(1);
   const KJB_FORMS = {
     Refiner:    { id: '2149582559', token: '9YUL8g3mWEc9nwCM7Pu_lX4L_khctm3HhnEaEIdcgu_Xx2SfE-HJUP0QPCeV6hEzHAqvj0o8nZOHZw4h3eEI8A' },
     Spiker:     { id: '2149582560', token: 'CDCPAwNa_O5707rLSStf-wlKZXKZZbd0zd5CDcVHvWKUypEkC4nVT2CzNlnjREvm7l00Ji9-GV70Q1jRpeSKJw' },
