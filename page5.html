@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <link rel="icon" type="image/png" href="favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Page 5 — Seen In Seasons</title>
+  <title>Page 5 — The Seen Workshop</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600;1,700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
@@ -113,7 +113,7 @@
         <span class="p5-hero-italic">inside WMHQ!</span>
       </h2>
       <p class="p5-hero-para">Totally hear you. The membership isn't the right move for everyone right now.</p>
-      <p class="p5-hero-para">But before you click away, there's one thing I want to put in your hands. Because no matter which archetype you got, what you actually need is a framework that tells you <em class="pink-italic">what season you're in right now</em> and how to move in it.</p>
+      <p class="p5-hero-para">But before you click away, there's one thing I want to put in your hands. Because no matter which archetype you got, what you actually need is content that turns attention into enquiries — and I'm teaching exactly how, <em class="pink-italic">live, in 3 days</em>.</p>
     </div>
   </div>
 
@@ -132,43 +132,40 @@
       <!-- B2: Title -->
       <div class="p5-title-block">
         <span class="p5-instead-label">Instead, I Recommend</span>
-        <h3 class="p5-workshop-title">Seen In <em class="p5-seasons-italic">Seasons</em></h3>
-        <span class="p5-workshop-sub">A Workshop</span>
+        <h3 class="p5-workshop-title">The <em class="p5-seasons-italic">Seen</em> Workshop</h3>
+        <span class="p5-workshop-sub">A 3-Day Live Event · June 23–25</span>
       </div>
 
       <!-- B3: Positioning -->
       <div class="p5-position-card">
-        <p>The 3-step framework that teaches you how to build a business that thrives in <em class="body-italic">every season of life</em>. Identify your season. Use the right tools. Stop forcing strategies that don't match the moment you're actually in.</p>
+        <p>The 3-day live event that turns your content into a <em class="body-italic">conversion system</em>. Three days, live with me, building the exact messaging and sales rhythm that moves people from first scroll to enquiry.</p>
       </div>
 
       <!-- B4: What you get -->
       <div class="p5-what-card">
-        <span class="p5-what-label">⊹ What You Get ⊹</span>
-        <p class="p5-what-sub">A workshop that teaches you:</p>
+        <span class="p5-what-label">⊹ The 3 Days ⊹</span>
+        <p class="p5-what-sub">Live with me, June 23–25:</p>
         <ul class="p5-bullet-list">
-          <li>The complete <strong>3-season Seen In Seasons framework</strong></li>
-          <li>How to identify exactly <strong>which season you're in right now</strong></li>
-          <li><strong>Strategic and subconscious tools</strong> for each season</li>
-          <li>A planning approach that <strong>adapts to your real life</strong></li>
-          <li>Access to <strong>WMHQ The Room</strong> (free community + monthly free trainings)</li>
-          <li><strong>Instant lifetime access</strong> to the replay</li>
+          <li><strong>Day 1 · June 23 —</strong> Find the messaging gap so your audience finally understands why your offer matters now.</li>
+          <li><strong>Day 2 · June 24 —</strong> Build the buyer pathway so your content moves people from first scroll to enquiry.</li>
+          <li><strong>Day 3 · June 25 —</strong> Create the weekly sales system so you know exactly what to post — without guessing, spiralling, or panic-posting.</li>
         </ul>
       </div>
 
       <!-- B5: Pricing -->
       <div class="p5-pricing">
-        <span class="p5-price-label">Your Price Today</span>
-        <span class="p5-price-old">$47</span>
-        <span class="p5-price-new">$15</span>
-        <span class="p5-price-sub">One-time payment. Lifetime access.</span>
-        <span class="p5-save-pill">You Save $32</span>
+        <span class="p5-price-label">Your Price Today · Limited Spots</span>
+        <span class="p5-price-old">$111</span>
+        <span class="p5-price-new">$9</span>
+        <span class="p5-price-sub">Goes to $111 with no bonuses once we go live.</span>
+        <span class="p5-save-pill">You Save $102</span>
       </div>
 
       <!-- B6: CTA -->
-      <a href="https://www.jessicapinili.com/offers/xzZV62go" target="_blank" rel="noopener noreferrer" class="pill pill-burgundy p5-cta">Yes, give me Seen In Seasons for $15 →</a>
+      <a href="https://www.jessicapinili.com/seenworkshop-june" target="_blank" rel="noopener noreferrer" class="pill pill-burgundy p5-cta">Yes, save my spot for $9 →</a>
 
       <!-- B7: Subtext -->
-      <p class="p5-cta-sub">One-Time Offer · Not Available After This Page</p>
+      <p class="p5-cta-sub">Limited Spots · Live June 23–25</p>
 
       <!-- B8: Decline -->
       <hr class="p5-decline-divider">
@@ -214,5 +211,45 @@
   </div>
   <span class="footer-copy">Jessica Pinili &copy;</span>
 </footer>
+
+<script>
+(function () {
+  var DURATION = 5 * 60;                 // 5 minutes, in seconds
+  var KEY = 'seenWorkshopDeadline';      // persists per-visitor so a refresh can't reset it
+  var timeEl = document.querySelector('.timer-time');
+  var pill = document.querySelector('.p5-timer-pill');
+  var cta = document.querySelector('.p5-cta');
+
+  var deadline = parseInt(localStorage.getItem(KEY), 10);
+  if (!deadline || isNaN(deadline)) {
+    deadline = Date.now() + DURATION * 1000;
+    localStorage.setItem(KEY, String(deadline));
+  }
+
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+  function expire() {
+    if (timeEl) timeEl.textContent = '00 : 00';
+    if (pill) pill.classList.remove('anim-shake');
+    if (cta) {
+      cta.textContent = 'This offer has expired';
+      cta.removeAttribute('href');
+      cta.removeAttribute('target');
+      cta.style.pointerEvents = 'none';
+      cta.style.opacity = '0.45';
+      cta.style.cursor = 'default';
+    }
+  }
+
+  function tick() {
+    var remaining = Math.round((deadline - Date.now()) / 1000);
+    if (remaining <= 0) { expire(); clearInterval(iv); return; }
+    if (timeEl) timeEl.textContent = pad(Math.floor(remaining / 60)) + ' : ' + pad(remaining % 60);
+  }
+
+  tick();
+  var iv = setInterval(tick, 1000);
+})();
+</script>
 </body>
 </html>
